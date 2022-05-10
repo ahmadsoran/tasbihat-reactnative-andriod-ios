@@ -1,19 +1,18 @@
 import { StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native'
 import React from 'react'
-import { FontAwesome } from '@expo/vector-icons'
 
 const SettingUI = (props) => {
     const ColorScheme = useColorScheme();
 
     return (
-        <TouchableOpacity activeOpacity={0.5}>
+        <TouchableOpacity onPress={props.onPress} activeOpacity={0.5}>
 
             <View style={{
                 ...styles.SettingView,
                 backgroundColor: ColorScheme === 'dark' ? '#0b1e2f' : '#cdcdcd',
 
             }}>
-                <FontAwesome name={props.icon} size={25} color={ColorScheme === 'dark' ? '#b7d9dd' : '#191919'} />
+                {props.icon}
 
                 <Text style={{
                     ...styles.SettingText,

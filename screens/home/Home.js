@@ -1,5 +1,5 @@
 import { View, Text, ImageBackground, TouchableOpacity, Vibration, useColorScheme } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { MyStyles, MyStyleSheet } from '../../assets/styles/styles'
 import LightBG from '../../assets/img/natureLight.jpg'
@@ -8,18 +8,35 @@ import soundRF from '../../assets/audio/penClick.mp3'
 import { Audio } from 'expo-av';
 import { FontAwesome } from '@expo/vector-icons';
 import * as MyFont from 'expo-font'
+import AsyncStorage from '../../storage/AsyncStorage'
+import { useSelector } from 'react-redux'
 const Home = ({ navigation }) => {
     const [ZikrNum, setZikrNum] = useState(0)
+    const [ZikrNumLimit, setZikrNumLimit] = useState(100)
     const [ZikrNext, setZikrNext] = useState(0)
     const ColorScheme = useColorScheme()
     const azkar = ['سُبْحَانَ اللَّهِ', 'الْحَمْدُ لِلَّهِ', 'لا إِلَهَ إِلا اللَّهُ', 'اللَّهُ أَكْبَر']
     const [sound, setSound] = React.useState();
     const [fontLoaded, setFontLoaded] = React.useState(false);
-    MyFont.loadAsync({
-        'DigitalFont': require('../../assets/fonts/digital-7.ttf'),
-    }).then(() => {
-        setFontLoaded(true);
-    });
+    const isReloading = useSelector(state => state.ReloaderSlice.Reload)
+    useEffect(() => {
+
+        MyFont.loadAsync({
+            'DigitalFont': require('../../assets/fonts/digital-7.ttf'),
+        }).then(() => {
+            setFontLoaded(true);
+        });
+
+    }, [])
+    useEffect(() => {
+
+        AsyncStorage.GetFromStorage('zikrNum').then(res => {
+            if (res !== null) {
+                setZikrNumLimit(res)
+            }
+        })
+    }, [, isReloading])
+
 
 
 
@@ -29,7 +46,6 @@ const Home = ({ navigation }) => {
 
         await sound.playAsync();
     }
-
     React.useEffect(() => {
         return sound
             ? () => {
@@ -41,8 +57,7 @@ const Home = ({ navigation }) => {
         setZikrNum(ZikrNum + 1)
 
     }
-
-    if (ZikrNum > 100) {
+    if (ZikrNum > ZikrNumLimit) {
         setZikrNum(0)
         setZikrNext(ZikrNext + 1)
         Vibration.vibrate(1000)
@@ -115,10 +130,10 @@ const Home = ({ navigation }) => {
                         }}>
                             <View style={{ backgroundColor: ColorScheme === 'dark' ? MyStyles.DarkColor.TOXTRANS : MyStyles.LightColor.KALTRINTRANS, borderRadius: 10, padding: 10, width: '80%', height: '80%' }}>
 
-                                <Text style={{ textAlign: 'center', fontSize: 50, color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX }}>
+                                <Text style={{ textAlign: 'center', fontSize: 40, color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX }}>
                                     {azkar[ZikrNext]}
                                 </Text>
-                                <Text style={{ textAlign: 'center', fontSize: 50, marginTop: 20, opacity: 0.7, color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX }}>Count</Text>
+                                <Text style={{ textAlign: 'center', fontSize: 40, marginTop: 20, opacity: 0.7, color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX }}>Count</Text>
                                 {
                                     fontLoaded ?
                                         <Text style={{ textAlign: 'center', fontSize: 65, opacity: .7, marginTop: 30, color: ColorScheme === 'dark' ? MyStyles.DarkColor.KAL : MyStyles.LightColor.TOX, fontFamily: 'DigitalFont' }}>{ZikrNum}</Text>
@@ -136,12 +151,23 @@ const Home = ({ navigation }) => {
                             alignItems: 'center',
 
                         }}>
-                            <View style={{ borderRadius: 1000, backgroundColor: ColorScheme === 'dark' ? MyStyles.DarkColor.TOXTRANS : MyStyles.LightColor.KALTRINTRANS, width: 150, height: 150, marginTop: 20 }}>
+                            <View style={{
+                                borderRadius: 1000,
+                                backgroundColor: ColorScheme === 'dark' ? MyStyles.DarkColor.TOXTRANS : MyStyles.LightColor.KALTRINTRANS,
+                                width: 120,
+                                height: 120,
+                                marginTop: 20,
+                                overflow: 'hidden',
+                                alignItems: 'center',
+                                display: 'flex',
+                                justifyContent: 'center',
+                            }}>
 
 
 
                                 <Text style={{
-                                    textAlign: 'center', fontSize: 60, transform: [{ translateY: 32 }],
+
+                                    fontSize: 50,
                                     color: ColorScheme === 'dark' ? MyStyles.DarkColor.KAL : MyStyles.LightColor.TOX
 
                                 }}>

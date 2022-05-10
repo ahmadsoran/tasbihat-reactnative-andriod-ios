@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
-import DarkModeSlice from '../slices/DarkModeSlice'
+import ReloaderSlice from '../slices/ReloaderSlice'
 export const store = configureStore({
     reducer: {
-        DarkModeSlice,
+        ReloaderSlice,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
         serializableCheck: false,
