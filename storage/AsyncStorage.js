@@ -16,5 +16,13 @@ async function SetToStorage(key, value) {
         return error.message;
     }
 }
+async function RemoveFromStorage(key, value) {
+    try {
+        await AsyncStorage.removeItem(key)
+        console.log(`${key} is removed`);
+    } catch (error) {
+        return error.message;
+    }
+}
 
-export default { GetFromStorage, SetToStorage };
+export default { GetFromStorage, SetToStorage, RemoveFromStorage };

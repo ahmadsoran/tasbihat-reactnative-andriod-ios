@@ -8,7 +8,7 @@ import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Slider } from "@rneui/themed";
 import { useDispatch, useSelector } from 'react-redux';
 import { setReload } from '../../slices/ReloaderSlice';
-const Setting = () => {
+const Setting = ({ navigation }) => {
     const ColorScheme = useColorScheme();
     const [ShowDialogs, setShowDialogs] = useState({ language: false, langReload: false })
     const [ShowDialogsZikr, setShowDialogsZikr] = useState(false)
@@ -44,6 +44,10 @@ const Setting = () => {
         <View style={{ ...MyStyleSheet.container, height: '100%', backgroundColor: ColorScheme === 'dark' ? MyStyles.DarkColor.BGTOX : 'whitesmoke' }}>
             <SettingUI onPress={() => setShowDialogs({ language: true })} icon={<FontAwesome name="language" size={28} color={ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.DARK} />} SettingName='Lnaguage' />
             <SettingUI onPress={() => setShowDialogsZikr(true)} icon={<MaterialCommunityIcons name="numeric" size={28} color={ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.DARK} />} SettingName='Tasbih Times' />
+            <SettingUI onPress={() => {
+                navigation.goBack()
+                navigation.navigate('WallpaperScreen')
+            }} icon={<MaterialCommunityIcons name="wallpaper" size={28} color={ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.DARK} />} SettingName='Wallpaper' />
 
 
             <Dialog backdropStyle={{

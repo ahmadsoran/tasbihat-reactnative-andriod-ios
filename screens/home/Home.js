@@ -14,6 +14,8 @@ const Home = ({ navigation }) => {
     const [ZikrNum, setZikrNum] = useState(0)
     const [ZikrNumLimit, setZikrNumLimit] = useState(100)
     const [ZikrNext, setZikrNext] = useState(0)
+    const [WallpaperScreenDark, setWallpaperScreenDark] = useState(undefined)
+    const [WallpaperScreenLight, setWallpaperScreenLight] = useState(undefined)
     const ColorScheme = useColorScheme()
     const azkar = ['سُبْحَانَ اللَّهِ', 'الْحَمْدُ لِلَّهِ', 'لا إِلَهَ إِلا اللَّهُ', 'اللَّهُ أَكْبَر']
     const [sound, setSound] = React.useState();
@@ -33,8 +35,25 @@ const Home = ({ navigation }) => {
         AsyncStorage.GetFromStorage('zikrNum').then(res => {
             if (res !== null) {
                 setZikrNumLimit(res)
+            } else {
+                setZikrNumLimit(100)
             }
         })
+        AsyncStorage.GetFromStorage('wallpaperLight').then(res => {
+            if (res !== null) {
+                setWallpaperScreenLight(res)
+            } else {
+                setWallpaperScreenLight(undefined)
+            }
+        })
+        AsyncStorage.GetFromStorage('wallpaperDark').then(res => {
+            if (res !== null) {
+                setWallpaperScreenDark(res)
+            } else {
+                setWallpaperScreenDark(undefined)
+            }
+        })
+        console.log('k')
     }, [, isReloading])
 
 
@@ -72,22 +91,47 @@ const Home = ({ navigation }) => {
 
     return (
         <>
-            <ImageBackground source={LightBG} blurRadius={20} style={{
-                width: '102%', height: '102%',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                zIndex: ColorScheme === 'dark' ? -2 : -1,
-                opacity: ColorScheme === 'dark' ? 0 : 1,
-            }} />
-            <ImageBackground source={DarkBG} blurRadius={20} style={{
-                width: '102%', height: '102%',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                zIndex: ColorScheme === 'dark' ? -1 : -2,
-                opacity: ColorScheme === 'dark' ? 1 : 0,
-            }} />
+            {
+                WallpaperScreenDark ?
+                    <ImageBackground source={{ uri: WallpaperScreenDark }} blurRadius={20} style={{
+                        width: '102%', height: '102%',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        zIndex: ColorScheme === 'dark' ? -1 : -2,
+                        opacity: ColorScheme === 'dark' ? 1 : 0,
+                    }} />
+                    :
+                    <ImageBackground source={DarkBG} blurRadius={20} style={{
+                        width: '102%', height: '102%',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        zIndex: ColorScheme === 'dark' ? -1 : -2,
+                        opacity: ColorScheme === 'dark' ? 1 : 0,
+                    }} />
+            }
+            {
+                WallpaperScreenLight ?
+                    <ImageBackground source={{ uri: WallpaperScreenLight }} blurRadius={20} style={{
+                        width: '102%', height: '102%',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        zIndex: ColorScheme === 'dark' ? -2 : -1,
+                        opacity: ColorScheme === 'dark' ? 0 : 1,
+                    }} />
+                    :
+                    <ImageBackground source={LightBG} blurRadius={20} style={{
+                        width: '102%', height: '102%',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        zIndex: ColorScheme === 'dark' ? -2 : -1,
+                        opacity: ColorScheme === 'dark' ? 0 : 1,
+                    }} />
+            }
+
             <SafeAreaView>
                 <TouchableOpacity style={{
 
@@ -128,17 +172,22 @@ const Home = ({ navigation }) => {
                             justifyContent: 'center',
 
                         }}>
-                            <View style={{ backgroundColor: ColorScheme === 'dark' ? MyStyles.DarkColor.TOXTRANS : MyStyles.LightColor.KALTRINTRANS, borderRadius: 10, padding: 10, width: '80%', height: '80%' }}>
+                            <View style={{
+                                backgroundColor: ColorScheme === 'dark' ? MyStyles.DarkColor.TOXTRANS : MyStyles.LightColor.KALTRINTRANS, borderRadius: 10, padding: 10, width: '80%', height: '80%',
+                                display: 'flex',
+                                justifyContent: 'space-evenly',
+                                alignItems: 'center',
+                            }}>
 
                                 <Text style={{ textAlign: 'center', fontSize: 40, color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX }}>
                                     {azkar[ZikrNext]}
                                 </Text>
-                                <Text style={{ textAlign: 'center', fontSize: 40, marginTop: 20, opacity: 0.7, color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX }}>Count</Text>
+                                <Text style={{ textAlign: 'center', fontSize: 40, opacity: 0.7, color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX }}>Count</Text>
                                 {
                                     fontLoaded ?
-                                        <Text style={{ textAlign: 'center', fontSize: 65, opacity: .7, marginTop: 30, color: ColorScheme === 'dark' ? MyStyles.DarkColor.KAL : MyStyles.LightColor.TOX, fontFamily: 'DigitalFont' }}>{ZikrNum}</Text>
+                                        <Text style={{ textAlign: 'center', fontSize: 65, opacity: .7, color: ColorScheme === 'dark' ? MyStyles.DarkColor.KAL : MyStyles.LightColor.TOX, fontFamily: 'DigitalFont' }}>{ZikrNum}</Text>
                                         :
-                                        <Text style={{ textAlign: 'center', fontSize: 65, opacity: .7, marginTop: 30, color: ColorScheme === 'dark' ? MyStyles.DarkColor.KAL : MyStyles.LightColor.TOX }}>{ZikrNum}</Text>
+                                        <Text style={{ textAlign: 'center', fontSize: 65, opacity: .7, color: ColorScheme === 'dark' ? MyStyles.DarkColor.KAL : MyStyles.LightColor.TOX }}>{ZikrNum}</Text>
 
                                 }
                             </View>
@@ -180,8 +229,8 @@ const Home = ({ navigation }) => {
 
                     </View>
 
-                </View>
-            </SafeAreaView>
+                </View >
+            </SafeAreaView >
         </>
 
 

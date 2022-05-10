@@ -9,6 +9,7 @@ import { MyStyles } from '../assets/styles/styles';
 import Setting from '../screens/modals/Setting';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import linking from './LinkingConf';
+import WallpaperScreen from '../screens/others/WallpaperScreen';
 const Tab = createBottomTabNavigator();
 export default function NavigationApp() {
     return (
@@ -27,6 +28,24 @@ function RootNavigator() {
     return (
         <Stack.Navigator>
             <Stack.Screen name="Root" component={NavigationBar} options={{ headerShown: false }} />
+            <Stack.Screen name="WallpaperScreen" component={WallpaperScreen} options={{
+                animation: 'slide_from_right',
+                customAnimationOnGesture: true,
+                gestureEnabled: true,
+                headerStyle: {
+                    backgroundColor: ColorScheme === 'dark' ? MyStyles.DarkColor.TOX : MyStyles.LightColor.KALTR,
+
+                },
+                headerTitle: 'Wallpaper',
+                headerTitleAlign: 'center',
+                headerTitleStyle: {
+                    color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX,
+                },
+
+
+
+
+            }} />
             <Stack.Group screenOptions={{
                 presentation: 'modal', animation: 'slide_from_bottom'
 
