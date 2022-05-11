@@ -10,6 +10,9 @@ import Setting from '../screens/modals/Setting';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import linking from './LinkingConf';
 import WallpaperScreen from '../screens/others/WallpaperScreen';
+import AzkarScreen from '../screens/others/AzkarScreen';
+import { setOpenBottomSheet } from '../slices/ReloaderSlice';
+import { useDispatch, useSelector } from 'react-redux';
 const Tab = createBottomTabNavigator();
 export default function NavigationApp() {
     return (
@@ -24,6 +27,8 @@ function RootNavigator() {
 
 
     const ColorScheme = useColorScheme();
+    const dispatch = useDispatch();
+    const openBottomSheet = useSelector(state => state.ReloaderSlice.openBottomSheet);
 
     return (
         <Stack.Navigator>
@@ -41,10 +46,27 @@ function RootNavigator() {
                 headerTitleStyle: {
                     color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX,
                 },
+            }} />
+            <Stack.Screen name="AzkarScreen" component={AzkarScreen} options={{
+                animation: 'slide_from_right',
+                customAnimationOnGesture: true,
+                gestureEnabled: true,
+                headerStyle: {
+                    backgroundColor: ColorScheme === 'dark' ? MyStyles.DarkColor.TOX : MyStyles.LightColor.KALTR,
 
-
-
-
+                },
+                headerTitle: 'Azkar',
+                headerTitleAlign: 'center',
+                headerTitleStyle: {
+                    color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX,
+                },
+                headerRight: () => (
+                    <TouchableOpacity onPress={() => {
+                        dispatch(setOpenBottomSheet(!openBottomSheet))
+                    }}>
+                        <MaterialCommunityIcons name="dots-vertical" size={30} color={ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX} />
+                    </TouchableOpacity>
+                )
             }} />
             <Stack.Group screenOptions={{
                 presentation: 'modal', animation: 'slide_from_bottom'

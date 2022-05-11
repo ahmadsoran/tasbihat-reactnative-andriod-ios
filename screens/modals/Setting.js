@@ -13,6 +13,8 @@ const Setting = ({ navigation }) => {
     const [ShowDialogs, setShowDialogs] = useState({ language: false, langReload: false })
     const [ShowDialogsZikr, setShowDialogsZikr] = useState(false)
     const [zikrNum, setZikrNum] = useState(100)
+    const [zikrNumStep, setZikrNumStep] = useState(10)
+    const [zikrNumMax, setZikrNumMax] = useState(1000)
     const dispatch = useDispatch()
     const isReloading = useSelector(state => state.ReloaderSlice.Reload)
 
@@ -48,6 +50,10 @@ const Setting = ({ navigation }) => {
                 navigation.goBack()
                 navigation.navigate('WallpaperScreen')
             }} icon={<MaterialCommunityIcons name="wallpaper" size={28} color={ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.DARK} />} SettingName='Wallpaper' />
+            <SettingUI onPress={() => {
+                navigation.goBack()
+                navigation.navigate('AzkarScreen')
+            }} icon={<MaterialCommunityIcons name="hands-pray" size={28} color={ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.DARK} />} SettingName='Azkar' />
 
 
             <Dialog backdropStyle={{
@@ -113,7 +119,7 @@ const Setting = ({ navigation }) => {
                 </View>
                 <Slider
                     minimumValue={10}
-                    maximumValue={1000}
+                    maximumValue={zikrNumMax}
                     value={zikrNum}
                     onValueChange={(value) => {
                         setZikrNum(Math.floor(value))
@@ -122,16 +128,18 @@ const Setting = ({ navigation }) => {
                     thumbStyle={{
                         backgroundColor: zikrNum < 50 ? '#ff0000' : zikrNum >= 50 && zikrNum < 100 ? '#ff6600' : '#008200',
                         borderRadius: 1000,
-                        width: 10,
+                        width: 30,
                         height: 30,
                     }}
-                    step={10}
+                    step={zikrNumStep}
                     minimumTrackTintColor={zikrNum < 50 ? '#ff0000' : zikrNum >= 50 && zikrNum < 100 ? '#ff6600' : '#008200'}
                     maximumTrackTintColor='gray'
                     onSlidingComplete={(value) => {
                         AsyncStorage.SetToStorage('zikrNum', value.toString())
                         dispatch(setReload(!isReloading))
                     }}
+
+
 
 
                 />
@@ -147,7 +155,36 @@ const Setting = ({ navigation }) => {
                         {zikrNum}
                     </Text>
                 }
+                <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+                    <CheckBox
+                        onPressIn={() => {
+                            setZikrNumStep(1)
+                            setZikrNumMax(150)
 
+                        }}
+                        checkedIcon="dot-circle-o"
+                        uncheckedIcon="circle-o" checked={zikrNumStep === 1 && true} title={1} textStyle={{ position: 'absolute', bottom: -20, left: '-50%', transform: [{ translateX: 8 }] }} />
+                    <CheckBox
+                        onPressIn={() => {
+                            setZikrNumStep(10)
+                            setZikrNumMax(1000)
+                        }}
+                        checkedIcon="dot-circle-o"
+                        uncheckedIcon="circle-o" checked={zikrNumStep === 10 && true} title={10} textStyle={{ position: 'absolute', bottom: -20, left: '-50%', transform: [{ translateX: 3 }] }} />
+                    <CheckBox
+                        checkedIcon="dot-circle-o"
+                        uncheckedIcon="circle-o"
+                        checked={zikrNumStep === 100 && true}
+                        title={100}
+                        textStyle={{ position: 'absolute', bottom: -20, left: '-50%', transform: [{ translateX: 3 }] }}
+                        onPressIn={() => {
+                            setZikrNumStep(100)
+                            setZikrNumMax(2000)
+                        }}
+                    />
+
+
+                </View>
             </Dialog>
         </View>
     )

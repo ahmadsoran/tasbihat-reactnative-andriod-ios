@@ -1,4 +1,4 @@
-import { View, Text, ImageBackground, TouchableOpacity, Vibration, useColorScheme } from 'react-native'
+import { View, Text, ImageBackground, TouchableOpacity, Vibration, useColorScheme, Pressable } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { MyStyles, MyStyleSheet } from '../../assets/styles/styles'
@@ -16,6 +16,7 @@ const Home = ({ navigation }) => {
     const [ZikrNext, setZikrNext] = useState(0)
     const [WallpaperScreenDark, setWallpaperScreenDark] = useState(undefined)
     const [WallpaperScreenLight, setWallpaperScreenLight] = useState(undefined)
+    const [ActiveBG, setActiveBg] = useState(false)
     const ColorScheme = useColorScheme()
     const azkar = ['سُبْحَانَ اللَّهِ', 'الْحَمْدُ لِلَّهِ', 'لا إِلَهَ إِلا اللَّهُ', 'اللَّهُ أَكْبَر']
     const [sound, setSound] = React.useState();
@@ -87,8 +88,7 @@ const Home = ({ navigation }) => {
 
 
     }
-
-
+    console.log(ActiveBG)
     return (
         <>
             {
@@ -177,11 +177,28 @@ const Home = ({ navigation }) => {
                                 display: 'flex',
                                 justifyContent: 'space-evenly',
                                 alignItems: 'center',
-                            }}>
+                            }}
+                            >
+                                <Pressable
+                                    onPressIn={() => setActiveBg(true)}
+                                    onLongPress={() => {
+                                        setActiveBg(false)
+                                        navigation.navigate('AzkarScreen')
+                                    }}
+                                >
 
-                                <Text style={{ textAlign: 'center', fontSize: 40, color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX }}>
-                                    {azkar[ZikrNext]}
-                                </Text>
+                                    <Text style={{
+                                        textAlign: 'center',
+                                        fontSize: 40,
+                                        color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX,
+                                        backgroundColor: ActiveBG ? '#ffffff4a' : '#ffffff00',
+                                        padding: 10,
+                                        borderRadius: 10,
+                                    }}
+                                    >
+                                        {azkar[ZikrNext]}
+                                    </Text>
+                                </Pressable>
                                 <Text style={{ textAlign: 'center', fontSize: 40, opacity: 0.7, color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX }}>Count</Text>
                                 {
                                     fontLoaded ?
