@@ -17,6 +17,7 @@ const Home = ({ navigation }) => {
     const [WallpaperScreenDark, setWallpaperScreenDark] = useState(undefined)
     const [WallpaperScreenLight, setWallpaperScreenLight] = useState(undefined)
     const [ActiveBG, setActiveBg] = useState(false)
+    const [AzkarFromStorage, setAzkarFromStorage] = useState([])
     const ColorScheme = useColorScheme()
     const azkar = ['سُبْحَانَ اللَّهِ', 'الْحَمْدُ لِلَّهِ', 'لا إِلَهَ إِلا اللَّهُ', 'اللَّهُ أَكْبَر']
     const [sound, setSound] = React.useState();
@@ -54,7 +55,15 @@ const Home = ({ navigation }) => {
                 setWallpaperScreenDark(undefined)
             }
         })
-        console.log('k')
+        AsyncStorage.GetFromStorage('azkar').then(res => {
+            if (res !== null) {
+                setAzkarFromStorage(JSON.parse(res))
+            } else {
+                setAzkarFromStorage(azkar)
+            }
+            console.log(res);
+
+        })
     }, [, isReloading])
 
 
@@ -83,12 +92,11 @@ const Home = ({ navigation }) => {
         Vibration.vibrate(1000)
 
     }
-    if (ZikrNext >= azkar.length) {
+    if (AzkarFromStorage.length !== 0 && ZikrNext >= AzkarFromStorage.length) {
         setZikrNext(0)
 
 
     }
-    console.log(ActiveBG)
     return (
         <>
             {
@@ -196,7 +204,7 @@ const Home = ({ navigation }) => {
                                         borderRadius: 10,
                                     }}
                                     >
-                                        {azkar[ZikrNext]}
+                                        {AzkarFromStorage[ZikrNext]}
                                     </Text>
                                 </Pressable>
                                 <Text style={{ textAlign: 'center', fontSize: 40, opacity: 0.7, color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX }}>Count</Text>

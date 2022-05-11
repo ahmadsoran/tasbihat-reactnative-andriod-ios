@@ -1,15 +1,18 @@
-import { ScrollView, Text, TouchableOpacity, useColorScheme, View } from 'react-native'
+import {
+    Alert, Keyboard, ScrollView, Text, TextInput,
+    TouchableOpacity, useColorScheme, View
+} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { MyStyles } from '../../assets/styles/styles'
 import AsyncStorage from '../../storage/AsyncStorage'
 import { useDispatch, useSelector } from 'react-redux'
-import { BottomSheet, Button } from '@rneui/themed'
+import { BottomSheet, Button, Dialog } from '@rneui/themed'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { setOpenBottomSheet, setReload } from '../../slices/ReloaderSlice'
 export default function AzkarScreen() {
     const azkar = ['سُبْحَانَ اللَّهِ', 'الْحَمْدُ لِلَّهِ', 'لا إِلَهَ إِلا اللَّهُ', 'اللَّهُ أَكْبَر']
     const [Azkar, setAzkar] = useState([])
-    const [AzkarFilterd, setAzkarFilterd] = useState([])
+    const [zikrInput, setZikrInput] = useState('')
     const ColorScheme = useColorScheme()
     const dispatch = useDispatch()
     const isReloading = useSelector(state => state.ReloaderSlice.Reload)
@@ -37,22 +40,42 @@ export default function AzkarScreen() {
     }
     const DeleteFromAzkar = async (azkar) => {
         const filtered = Azkar.indexOf(azkar)
+        if (Azkar.length === 1) {
+            return Alert.alert('cant delete last one')
 
-        if (filtered !== -1) {
-            Azkar.splice(filtered, 1)
-            setAzkar(Azkar)
-            AsyncStorage.SetToStorage('azkar', JSON.stringify(Azkar)).then(() => {
-                dispatch(setReload(!isReloading))
-            })
-            console.log(Azkar)
+        } else {
+            if (filtered !== -1) {
+                Azkar.splice(filtered, 1)
+                setAzkar(Azkar)
+                AsyncStorage.SetToStorage('azkar', JSON.stringify(Azkar)).then(() => {
+                    dispatch(setReload(!isReloading))
+                })
+                console.log(Azkar)
 
+            }
         }
 
     }
     const DeleteAllAzkar = () => {
-        setAzkar(azkar)
-        AsyncStorage.RemoveFromStorage('azkar', JSON.stringify(Azkar))
-        dispatch(setReload(!isReloading))
+
+        // confirm alert 
+        Alert.alert(
+            'حذف الكل',
+            'هل تريد حذف الكل؟',
+            [
+                { text: 'إلغاء', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+                {
+                    text: 'حذف', onPress: () => {
+                        setAzkar(azkar)
+                        AsyncStorage.RemoveFromStorage('azkar', JSON.stringify(Azkar))
+                        dispatch(setReload(!isReloading))
+                    }
+                },
+            ],
+            { cancelable: true }
+        )
+
+
     }
     return (
         <View style={{
@@ -111,9 +134,6 @@ export default function AzkarScreen() {
                             activeOpacity={0.7}
 
 
-                            onPress={(e) => {
-                                PushToAzkar(i++)
-                            }}
                         >
                             {
                                 IsEditMode && (
@@ -225,8 +245,156 @@ export default function AzkarScreen() {
 
                     </View>
                 )
-
             }
+            <Dialog
+                animationType='fade'
+                overlayStyle={{
+                    backgroundColor: ColorScheme === 'dark' ? MyStyles.DarkColor.BGTOX : 'white',
+                    position: 'absolute',
+                    top: '25%',
+                    elevation: 15,
+                    shadowColor: '#000',
+                    shadowOffset: {
+                        width: 0,
+                        height: 2,
+                    },
+                    shadowOpacity: .7,
+                    shadowRadius: 15,
+                    borderRadius: 20,
+                    padding: 10,
+                    overflow: 'hidden',
+
+                }}
+                isVisible={IsAddMode}
+                onBackdropPress={() => {
+                    // dismiss keyboard
+                    Keyboard.dismiss()
+                }
+                }
+
+            >
+                <View style={{
+                    borderBottomColor: '#9d9d9d72',
+                    borderBottomWidth: 1,
+                    paddingBottom: 10,
+
+                }}>
+                    <Text style={{
+                        fontSize: 20,
+                        fontWeight: 'bold',
+                        color: 'gray',
+                        textAlign: 'center',
+                    }}>
+                        Add Zikr
+                    </Text>
+                    <MaterialCommunityIcons name="close" size={30} color="#ff0000a0" style={{
+                        position: 'absolute',
+                        top: 0,
+                        right: 0,
+                    }}
+                        onPress={() => {
+                            setIsAddMode(false)
+
+                        }
+                        }
+                        android_hyphenationFrequency="normal"
+
+                    />
+
+                </View>
+                <View style={{
+                    position: 'relative',
+                    maxHeight: '60%',
+
+                }}>
+                    <TextInput
+                        style={{
+                            borderRadius: 10,
+                            borderWidth: 1,
+                            borderColor: '#9d9d9d',
+                            padding: 10,
+                            marginVertical: 10,
+                            fontSize: 20,
+                            color: 'gray',
+                            textAlign: 'center',
+                            backgroundColor: 'whitesmoke'
+
+                        }}
+                        onChangeText={(text) => {
+                            setZikrInput(text)
+                        }
+                        }
+                        value={zikrInput}
+                        multiline={true}
+                        scrollEnabled={true}
+                        keyboardAppearance={ColorScheme === 'dark' ? 'dark' : 'light'}
+                        spellCheck={false}
+                        autoCorrect={false}
+                        placeholder={'Enter Zikr'}
+                        blurOnSubmit={true}
+                        numberOfLines={5}
+                        textBreakStrategy={'simple'}
+
+
+
+
+                    />
+                </View>
+                <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginVertical: 10,
+                    paddingHorizontal: 10,
+                    paddingVertical: 10,
+                }}>
+                    <Button
+                        title='Cancel'
+                        containerStyle={{
+                            borderRadius: 1000,
+                            overflow: 'hidden',
+                            width: '40%',
+
+                        }}
+                        buttonStyle={{
+                            backgroundColor: '#ff0000b4',
+                            borderRadius: 1000,
+
+
+                        }}
+                        onPress={() => {
+                            setZikrInput('')
+                            setIsAddMode(false)
+                        }}
+                    />
+                    <Button
+                        title='Add'
+                        containerStyle={{
+                            borderRadius: 1000,
+                            overflow: 'hidden',
+                            width: '40%',
+
+                        }}
+                        buttonStyle={{
+                            backgroundColor: ColorScheme === 'dark' ? MyStyles.DarkColor.KAL : MyStyles.LightColor.KAL,
+                            borderRadius: 1000,
+
+                        }}
+                        onPress={() => {
+                            if (!zikrInput.length > 0) {
+                                Alert.alert('Please Enter Zikr')
+                            }
+                            else {
+
+                                PushToAzkar(zikrInput)
+                                setZikrInput('')
+                            }
+                        }}
+
+                    />
+                </View>
+
+            </Dialog>
         </View >
     )
 }

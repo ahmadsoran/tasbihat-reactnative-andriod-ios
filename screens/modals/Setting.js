@@ -74,6 +74,8 @@ const Setting = ({ navigation }) => {
                     </Text>
                 </View>
                 <CheckBox
+                    checkedIcon="dot-circle-o"
+                    uncheckedIcon="circle-o"
                     onPressIn={() => {
                         setLanguageHandler('en')
                         setShowDialogs({ langReload: !ShowDialogs.langReload })
@@ -82,6 +84,8 @@ const Setting = ({ navigation }) => {
                     checked={Language === 'en' && true}
                     title={'english'} />
                 <CheckBox
+                    checkedIcon="dot-circle-o"
+                    uncheckedIcon="circle-o"
                     onPressIn={() => {
                         setLanguageHandler('ku')
                         setShowDialogs({ langReload: !ShowDialogs.langReload })
@@ -91,6 +95,8 @@ const Setting = ({ navigation }) => {
                     checked={Language === 'ku' && true}
                     title={'Kurdish'} />
                 <CheckBox
+                    checkedIcon="dot-circle-o"
+                    uncheckedIcon="circle-o"
                     onPressIn={() => {
                         setLanguageHandler('ar')
                         setShowDialogs({ langReload: !ShowDialogs.langReload })
