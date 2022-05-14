@@ -8,6 +8,7 @@ import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Slider } from "@rneui/themed";
 import { useDispatch, useSelector } from 'react-redux';
 import { setReload } from '../../slices/ReloaderSlice';
+import { useTranslation } from 'react-i18next';
 const Setting = ({ navigation }) => {
     const ColorScheme = useColorScheme();
     const [ShowDialogs, setShowDialogs] = useState({ language: false, langReload: false })
@@ -16,8 +17,8 @@ const Setting = ({ navigation }) => {
     const [zikrNumStep, setZikrNumStep] = useState(10)
     const [zikrNumMax, setZikrNumMax] = useState(1000)
     const dispatch = useDispatch()
+    const { t, i18n } = useTranslation();
     const isReloading = useSelector(state => state.ReloaderSlice.Reload)
-
     const [Language, setLanguage] = useState()
     useEffect(() => {
         AsyncStorage.GetFromStorage('language').then(value => {
@@ -38,22 +39,28 @@ const Setting = ({ navigation }) => {
         })
     }, [, ShowDialogs.langReload])
     const setLanguageHandler = (language) => {
-        AsyncStorage.SetToStorage('language', language)
+        AsyncStorage.SetToStorage('language', language).then(() => {
+            dispatch(setReload(!isReloading))
+        })
     }
 
+
+    const changeLanguage = value => {
+        i18n.changeLanguage(value).catch(err => console.log(err));
+    };
     return (
 
         <View style={{ ...MyStyleSheet.container, height: '100%', backgroundColor: ColorScheme === 'dark' ? MyStyles.DarkColor.BGTOX : 'whitesmoke' }}>
-            <SettingUI onPress={() => setShowDialogs({ language: true })} icon={<FontAwesome name="language" size={28} color={ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.DARK} />} SettingName='Lnaguage' />
-            <SettingUI onPress={() => setShowDialogsZikr(true)} icon={<MaterialCommunityIcons name="numeric" size={28} color={ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.DARK} />} SettingName='Tasbih Times' />
+            <SettingUI onPress={() => setShowDialogs({ language: true })} icon={<FontAwesome name="language" size={28} color={ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.DARK} />} SettingName={t('language')} />
+            <SettingUI onPress={() => setShowDialogsZikr(true)} icon={<MaterialCommunityIcons name="numeric" size={28} color={ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.DARK} />} SettingName={t('tasbihTimes')} />
             <SettingUI onPress={() => {
                 navigation.goBack()
                 navigation.navigate('WallpaperScreen')
-            }} icon={<MaterialCommunityIcons name="wallpaper" size={28} color={ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.DARK} />} SettingName='Wallpaper' />
+            }} icon={<MaterialCommunityIcons name="wallpaper" size={28} color={ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.DARK} />} SettingName={t('wallpaper')} />
             <SettingUI onPress={() => {
                 navigation.goBack()
                 navigation.navigate('AzkarScreen')
-            }} icon={<MaterialCommunityIcons name="hands-pray" size={28} color={ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.DARK} />} SettingName='Azkar' />
+            }} icon={<MaterialCommunityIcons name="hands-pray" size={28} color={ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.DARK} />} SettingName={t('azkar')} />
 
 
             <Dialog backdropStyle={{
@@ -70,7 +77,7 @@ const Setting = ({ navigation }) => {
                     borderBottomWidth: 1,
                 }}>
                     <Text style={{ marginBottom: 10, fontSize: 20, color: '#4c4c4c', textAlign: 'center' }}>
-                        Language
+                        {t('language')}
                     </Text>
                 </View>
                 <CheckBox
@@ -79,32 +86,35 @@ const Setting = ({ navigation }) => {
                     onPressIn={() => {
                         setLanguageHandler('en')
                         setShowDialogs({ langReload: !ShowDialogs.langReload })
+                        changeLanguage('en')
                     }}
                     checkedColor='gold'
                     checked={Language === 'en' && true}
-                    title={'english'} />
+                    title={t('english')} />
                 <CheckBox
                     checkedIcon="dot-circle-o"
                     uncheckedIcon="circle-o"
                     onPressIn={() => {
                         setLanguageHandler('ku')
                         setShowDialogs({ langReload: !ShowDialogs.langReload })
+                        changeLanguage('ku')
 
                     }}
                     checkedColor='gold'
                     checked={Language === 'ku' && true}
-                    title={'Kurdish'} />
+                    title={t('kurdish')} />
                 <CheckBox
                     checkedIcon="dot-circle-o"
                     uncheckedIcon="circle-o"
                     onPressIn={() => {
                         setLanguageHandler('ar')
                         setShowDialogs({ langReload: !ShowDialogs.langReload })
+                        changeLanguage('ar')
 
                     }}
                     checkedColor='gold'
                     checked={Language === 'ar' && true}
-                    title={'Arabic'} />
+                    title={t('arabic')} />
             </Dialog>
             <Dialog backdropStyle={{
                 backgroundColor: ColorScheme === 'dark' ? '#00001730' : '##ffffff32',
@@ -120,7 +130,7 @@ const Setting = ({ navigation }) => {
                     borderBottomWidth: 1,
                 }}>
                     <Text style={{ marginBottom: 10, fontSize: 20, color: '#4c4c4c', textAlign: 'center' }}>
-                        Set Tasbih Times
+                        {t('setTasbihTimes')}
                     </Text>
                 </View>
                 <Slider

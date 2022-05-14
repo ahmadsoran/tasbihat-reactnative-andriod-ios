@@ -7,6 +7,7 @@ import { setStatusBarStyle } from 'expo-status-bar'
 import { useColorScheme } from "react-native";
 import { useEffect } from "react";
 import * as MyFont from 'expo-font'
+import './lang/i18n';
 
 
 export default function App() {

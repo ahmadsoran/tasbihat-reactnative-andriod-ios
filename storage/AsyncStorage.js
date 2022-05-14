@@ -11,18 +11,31 @@ async function GetFromStorage(req) {
 async function SetToStorage(key, value) {
     try {
         await AsyncStorage.setItem(key, value)
-        console.log(`${key} is set to ${value}`);
     } catch (error) {
         return error.message;
     }
 }
-async function RemoveFromStorage(key, value) {
+async function RemoveFromStorage(key) {
     try {
         await AsyncStorage.removeItem(key)
-        console.log(`${key} is removed`);
     } catch (error) {
         return error.message;
     }
 }
+async function multiSetToStorage(key1, value1, key2, value2) {
+    try {
+        await AsyncStorage.multiSet([[key1, value1], [key2, value2]])
+    } catch (error) {
+        return error.message;
+    }
 
-export default { GetFromStorage, SetToStorage, RemoveFromStorage };
+}
+async function multiGetFromStorage(key1, key2) {
+    try {
+        const value = await AsyncStorage.multiGet([key1, key2])
+        return value;
+    } catch (error) {
+        return error.message;
+    }
+}
+export default { GetFromStorage, SetToStorage, RemoveFromStorage, multiSetToStorage, multiGetFromStorage };

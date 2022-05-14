@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { BottomSheet, Button, Dialog } from '@rneui/themed'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { setOpenBottomSheet, setReload } from '../../slices/ReloaderSlice'
+import MorningAzkar from '../../assets/AzkarData/MorningAzkar.json'
+import { useTranslation } from 'react-i18next'
 export default function AzkarScreen() {
     const azkar = ['سُبْحَانَ اللَّهِ', 'الْحَمْدُ لِلَّهِ', 'لا إِلَهَ إِلا اللَّهُ', 'اللَّهُ أَكْبَر']
     const [Azkar, setAzkar] = useState([])
@@ -19,6 +21,7 @@ export default function AzkarScreen() {
     const openBottomSheet = useSelector(state => state.ReloaderSlice.openBottomSheet)
     const [IsEditMode, setIsEditMode] = useState(false)
     const [IsAddMode, setIsAddMode] = useState(false)
+    const [FindZikr, setFindZikr] = useState(false)
     useEffect(() => {
         AsyncStorage.GetFromStorage('azkar').then(res => {
             if (res !== null) {
@@ -34,14 +37,13 @@ export default function AzkarScreen() {
         AsyncStorage.SetToStorage('azkar', JSON.stringify(Azkar)).then(() => {
             dispatch(setReload(!isReloading))
         })
-        console.log(azkar)
 
 
     }
     const DeleteFromAzkar = async (azkar) => {
         const filtered = Azkar.indexOf(azkar)
         if (Azkar.length === 1) {
-            return Alert.alert('cant delete last one')
+            return Alert.alert(t('cantDeleteLastZikr'))
 
         } else {
             if (filtered !== -1) {
@@ -50,22 +52,22 @@ export default function AzkarScreen() {
                 AsyncStorage.SetToStorage('azkar', JSON.stringify(Azkar)).then(() => {
                     dispatch(setReload(!isReloading))
                 })
-                console.log(Azkar)
 
             }
         }
 
     }
+    const { t } = useTranslation()
     const DeleteAllAzkar = () => {
 
         // confirm alert 
         Alert.alert(
-            'حذف الكل',
-            'هل تريد حذف الكل؟',
+            t('resetToDefault'),
+            t('doYouWantToReset'),
             [
-                { text: 'إلغاء', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+                { text: t('no'), onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
                 {
-                    text: 'حذف', onPress: () => {
+                    text: t('yes'), onPress: () => {
                         setAzkar(azkar)
                         AsyncStorage.RemoveFromStorage('azkar', JSON.stringify(Azkar))
                         dispatch(setReload(!isReloading))
@@ -77,6 +79,8 @@ export default function AzkarScreen() {
 
 
     }
+
+
     return (
         <View style={{
             padding: '3%',
@@ -111,7 +115,7 @@ export default function AzkarScreen() {
                                     paddingVertical: '1%',
 
                                 }}>
-                                    reset
+                                    {t('reset')}
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -132,6 +136,9 @@ export default function AzkarScreen() {
 
                             }}
                             activeOpacity={0.7}
+                            onLongPress={() => {
+                                setIsEditMode(!IsEditMode)
+                            }}
 
 
                         >
@@ -145,19 +152,29 @@ export default function AzkarScreen() {
                                             right: 0,
                                             borderRadius: 10,
                                             overflow: 'hidden',
-                                            padding: 0,
+                                            padding: 10,
                                             borderWidth: 0,
                                             height: '210%',
-                                            width: '20%',
+                                            width: '15%',
                                             zIndex: 10,
                                             display: 'flex',
                                             justifyContent: 'center',
-                                            alignItems: 'center',
-                                            margin: 0,
+                                            flexDirection: 'row',
+                                            transform: [{ translateY: -10 }],
+
+
 
                                         }}
                                         onPress={(e) => {
-                                            DeleteFromAzkar(data)
+                                            Alert.alert(
+                                                t('delete'),
+                                                `${data}`,
+                                                [
+                                                    { text: t('cancel'), onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+                                                    { text: t('delete'), onPress: () => { DeleteFromAzkar(data) } },
+                                                ],
+                                                { cancelable: true }
+                                            )
                                         }}
                                     >
                                         <MaterialCommunityIcons name="close" size={30} color="red" />
@@ -171,7 +188,7 @@ export default function AzkarScreen() {
                                 top: '50%',
                                 left: '5%',
                             }}>{i + 1}</Text>
-                            <View style={{ paddingLeft: 30 }}>
+                            <View style={{ paddingHorizontal: 30 }}>
                                 <Text testID='text' style={{
                                     width: '100%',
 
@@ -199,7 +216,7 @@ export default function AzkarScreen() {
                         elevation: 15,
 
                     }}>
-                        <Button title={'Edit'} titleStyle={{
+                        <Button title={t('edit')} titleStyle={{
                             color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.DARK,
                             fontSize: 15,
 
@@ -218,9 +235,11 @@ export default function AzkarScreen() {
                                 dispatch(setOpenBottomSheet(!openBottomSheet))
                                 setIsEditMode(!IsEditMode)
                                 setIsAddMode(false)
+                                setFindZikr(false)
+
                             }}
                         />
-                        <Button title={'Add'} titleStyle={{
+                        <Button title={t('add')} titleStyle={{
                             color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.DARK,
                             fontSize: 15,
 
@@ -239,6 +258,31 @@ export default function AzkarScreen() {
                             onPress={() => {
                                 dispatch(setOpenBottomSheet(!openBottomSheet))
                                 setIsAddMode(!IsAddMode)
+                                setIsEditMode(false)
+                                setFindZikr(false)
+
+                            }}
+                        />
+                        <Button title={t('find')} titleStyle={{
+                            color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.DARK,
+                            fontSize: 15,
+
+                        }}
+                            containerStyle={{
+                                width: 70,
+                                marginVertical: 5,
+                                borderRadius: 1000,
+                                overflow: 'hidden',
+                            }}
+                            buttonStyle={{
+                                backgroundColor: ColorScheme === 'dark' ? MyStyles.DarkColor.TOXTRANS : MyStyles.LightColor.KALTRINTRANS,
+                                borderRadius: 1000,
+
+                            }}
+                            onPress={() => {
+                                dispatch(setOpenBottomSheet(!openBottomSheet))
+                                setFindZikr(!FindZikr)
+                                setIsAddMode(false)
                                 setIsEditMode(false)
                             }}
                         />
@@ -285,7 +329,7 @@ export default function AzkarScreen() {
                         color: 'gray',
                         textAlign: 'center',
                     }}>
-                        Add Zikr
+                        {t('addZikr')}
                     </Text>
                     <MaterialCommunityIcons name="close" size={30} color="#ff0000a0" style={{
                         position: 'absolute',
@@ -317,7 +361,8 @@ export default function AzkarScreen() {
                             fontSize: 20,
                             color: 'gray',
                             textAlign: 'center',
-                            backgroundColor: 'whitesmoke'
+                            backgroundColor: 'whitesmoke',
+                            height: 200,
 
                         }}
                         onChangeText={(text) => {
@@ -330,7 +375,7 @@ export default function AzkarScreen() {
                         keyboardAppearance={ColorScheme === 'dark' ? 'dark' : 'light'}
                         spellCheck={false}
                         autoCorrect={false}
-                        placeholder={'Enter Zikr'}
+                        placeholder={t('enterZikr')}
                         blurOnSubmit={true}
                         numberOfLines={5}
                         textBreakStrategy={'simple'}
@@ -349,7 +394,7 @@ export default function AzkarScreen() {
                     paddingVertical: 10,
                 }}>
                     <Button
-                        title='Cancel'
+                        title={t('cancel')}
                         containerStyle={{
                             borderRadius: 1000,
                             overflow: 'hidden',
@@ -368,7 +413,7 @@ export default function AzkarScreen() {
                         }}
                     />
                     <Button
-                        title='Add'
+                        title={t('add')}
                         containerStyle={{
                             borderRadius: 1000,
                             overflow: 'hidden',
@@ -382,7 +427,7 @@ export default function AzkarScreen() {
                         }}
                         onPress={() => {
                             if (!zikrInput.length > 0) {
-                                Alert.alert('Please Enter Zikr')
+                                Alert.alert(t('pleaseEnterZikr'))
                             }
                             else {
 
@@ -393,6 +438,162 @@ export default function AzkarScreen() {
 
                     />
                 </View>
+
+            </Dialog>
+            <Dialog
+                animationType='fade'
+                overlayStyle={{
+                    backgroundColor: ColorScheme === 'dark' ? MyStyles.DarkColor.BGTOX : 'white',
+                    position: 'absolute',
+                    top: '10%',
+                    elevation: 15,
+
+                    shadowColor: '#000',
+                    shadowOffset: {
+                        width: 0,
+                        height: 2,
+                    },
+                    shadowOpacity: .7,
+                    shadowRadius: 15,
+                    borderRadius: 20,
+                    padding: 10,
+                    overflow: 'hidden',
+                    height: '85%',
+                    width: '90%',
+
+                }}
+                isVisible={FindZikr}
+                onBackdropPress={() => {
+                    setFindZikr(false)
+                }
+                }
+
+            >
+                <View style={{
+                    borderBottomColor: '#9d9d9d72',
+                    borderBottomWidth: 1,
+                    paddingBottom: 10,
+
+                }}>
+                    <Text style={{
+                        fontSize: 20,
+                        fontWeight: 'bold',
+                        color: 'gray',
+                        textAlign: 'center',
+                    }}>
+                        {t('addZikr')}
+                    </Text>
+                    <MaterialCommunityIcons name="close" size={30} color="#ff0000a0" style={{
+                        position: 'absolute',
+                        top: 0,
+                        right: 0,
+                    }}
+                        onPress={() => {
+                            setFindZikr(false)
+
+                        }
+                        }
+
+                    />
+
+                </View>
+                <ScrollView>
+
+                    <View style={{
+                        position: 'relative',
+
+                    }}>
+
+
+                        {
+                            MorningAzkar?.map((data, i) => {
+
+                                return (
+                                    <View key={i} style={{
+                                        marginVertical: 10,
+                                        backgroundColor: ColorScheme === 'dark' ? MyStyles.DarkColor.TOX : 'whitesmoke',
+                                        padding: 10,
+                                        borderRadius: 10,
+                                        shadowColor: '#000',
+                                        shadowOpacity: 0.8,
+                                        shadowRadius: 6,
+                                        shadowOffset: {
+                                            height: 1,
+                                            width: 0
+                                        },
+                                        elevation: 6,
+                                        marginHorizontal: 10,
+
+
+
+                                    }}>
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                if (Azkar.includes(data.Text)) {
+                                                    Alert.alert(t('alreadyAdded'))
+                                                } else {
+                                                    Alert.alert(
+                                                        t('addZikr'),
+                                                        data.Text,
+                                                        [
+                                                            {
+                                                                text: t('cancel'), onPress: () => { },
+                                                                style: 'cancel'
+
+                                                            },
+
+                                                            {
+                                                                text: t('add'), onPress: () => {
+                                                                    PushToAzkar(data.Text)
+                                                                },
+                                                            },
+                                                        ],
+                                                        { cancelable: true },
+
+                                                    )
+
+
+                                                }
+
+                                            }
+
+                                            }
+                                        >
+
+                                            <Text style={{
+                                                textAlign: 'right',
+                                                color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.DARK,
+                                            }}>
+                                                {data?.Text}
+                                            </Text>
+                                        </TouchableOpacity>
+                                        {
+                                            data.description !== "" && (
+                                                <View style={{
+                                                    backgroundColor: ColorScheme === 'dark' ? MyStyles.DarkColor.KAL : 'white',
+                                                    padding: 10,
+                                                    borderRadius: 10,
+                                                    marginTop: 10,
+                                                }}>
+
+                                                    <Text style={{
+                                                        textAlign: 'center',
+                                                        color: ColorScheme === 'dark' ? MyStyles.DarkColor.TOX : 'gray',
+
+                                                    }}>
+                                                        {data?.description}
+                                                    </Text>
+                                                </View>
+                                            )
+                                        }
+                                    </View>
+
+                                )
+                            })
+                        }
+
+                    </View>
+                </ScrollView>
 
             </Dialog>
         </View >

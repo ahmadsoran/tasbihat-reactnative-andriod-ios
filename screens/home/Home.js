@@ -1,4 +1,4 @@
-import { View, Text, ImageBackground, TouchableOpacity, Vibration, useColorScheme, Pressable } from 'react-native'
+import { View, Text, ImageBackground, TouchableOpacity, Vibration, useColorScheme, Pressable, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { MyStyles, MyStyleSheet } from '../../assets/styles/styles'
@@ -10,6 +10,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import * as MyFont from 'expo-font'
 import AsyncStorage from '../../storage/AsyncStorage'
 import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 const Home = ({ navigation }) => {
     const [ZikrNum, setZikrNum] = useState(0)
     const [ZikrNumLimit, setZikrNumLimit] = useState(100)
@@ -27,6 +28,7 @@ const Home = ({ navigation }) => {
 
         MyFont.loadAsync({
             'DigitalFont': require('../../assets/fonts/digital-7.ttf'),
+
         }).then(() => {
             setFontLoaded(true);
         });
@@ -61,7 +63,6 @@ const Home = ({ navigation }) => {
             } else {
                 setAzkarFromStorage(azkar)
             }
-            console.log(res);
 
         })
     }, [, isReloading])
@@ -97,6 +98,7 @@ const Home = ({ navigation }) => {
 
 
     }
+    const { t } = useTranslation()
     return (
         <>
             {
@@ -185,29 +187,39 @@ const Home = ({ navigation }) => {
                                 display: 'flex',
                                 justifyContent: 'space-evenly',
                                 alignItems: 'center',
+                                width: '100%',
+                                height: '100%',
                             }}
                             >
-                                <Pressable
-                                    onPressIn={() => setActiveBg(true)}
-                                    onLongPress={() => {
-                                        setActiveBg(false)
-                                        navigation.navigate('AzkarScreen')
-                                    }}
-                                >
+                                <ScrollView>
 
-                                    <Text style={{
-                                        textAlign: 'center',
-                                        fontSize: 40,
-                                        color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX,
-                                        backgroundColor: ActiveBG ? '#ffffff4a' : '#ffffff00',
-                                        padding: 10,
-                                        borderRadius: 10,
-                                    }}
+                                    <Pressable
+                                        onPressIn={() => setActiveBg(true)}
+                                        onLongPress={() => {
+                                            setActiveBg(false)
+                                            navigation.navigate('AzkarScreen')
+                                        }}
+                                        onPressOut={() => setActiveBg(false)}
+                                        style={{
+                                            backgroundColor: ActiveBG ? '#ffffff4a' : '#ffffff00',
+                                            padding: 10,
+                                            borderRadius: 10,
+                                        }}
+
                                     >
-                                        {AzkarFromStorage[ZikrNext]}
-                                    </Text>
-                                </Pressable>
-                                <Text style={{ textAlign: 'center', fontSize: 40, opacity: 0.7, color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX }}>Count</Text>
+
+                                        <Text style={{
+                                            textAlign: 'center',
+                                            fontSize: AzkarFromStorage[ZikrNext]?.length > 55 ? 20 : 50,
+                                            color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX,
+                                            lineHeight: AzkarFromStorage[ZikrNext]?.length > 55 ? 30 : 65,
+                                        }}
+                                        >
+                                            {AzkarFromStorage[ZikrNext]}
+                                        </Text>
+                                    </Pressable>
+                                </ScrollView>
+                                <Text style={{ textAlign: 'center', fontSize: 40, opacity: 0.7, color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX }}>{t('times')}</Text>
                                 {
                                     fontLoaded ?
                                         <Text style={{ textAlign: 'center', fontSize: 65, opacity: .7, color: ColorScheme === 'dark' ? MyStyles.DarkColor.KAL : MyStyles.LightColor.TOX, fontFamily: 'DigitalFont' }}>{ZikrNum}</Text>

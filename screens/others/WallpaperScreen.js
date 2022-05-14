@@ -8,10 +8,12 @@ import { Button, Image } from '@rneui/themed';
 import * as ImagePicker from 'expo-image-picker';
 import { setReload } from '../../slices/ReloaderSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 const WallpaperScreen = () => {
     const ColorScheme = useColorScheme();
     const [WallpaperDark, setWallpaperDark] = useState('')
     const [WallpaperLight, setWallpaperLight] = useState('')
+    const { t } = useTranslation()
     const [loading, setLoading] = useState({
         btn1: false,
         btn2: false,
@@ -135,7 +137,7 @@ const WallpaperScreen = () => {
 
                         />
                     }
-                    <Button title='change'
+                    <Button title={t('change')}
                         containerStyle={{
                             marginTop: '6%',
                             width: '100%',
@@ -150,7 +152,7 @@ const WallpaperScreen = () => {
                         onPress={pickImage}
                         loading={loading.btn1}
                     />
-                    <Button title='reset'
+                    <Button title={t('reset')}
                         containerStyle={{
                             marginTop: '6%',
                             width: '100%',
@@ -191,7 +193,7 @@ const WallpaperScreen = () => {
 
                         />
                     }
-                    <Button title='change'
+                    <Button title={t('change')}
                         containerStyle={{
                             marginTop: '6%',
                             width: '100%',
@@ -207,7 +209,7 @@ const WallpaperScreen = () => {
                         loading={loading.btn3}
 
                     />
-                    <Button title='reset'
+                    <Button title={t('reset')}
                         containerStyle={{
                             marginTop: '6%',
                             width: '100%',
