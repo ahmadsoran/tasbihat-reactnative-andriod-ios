@@ -8,6 +8,7 @@ export const ReloaderSlice = createSlice({
         Reload: false,
         openBottomSheet: false,
         openSuraList: false,
+        openSuraListDialog: false,
         suraNow: '',
     },
     reducers: {
@@ -19,10 +20,13 @@ export const ReloaderSlice = createSlice({
         },
         setOpenSuraList: (state, action) => {
             state.openSuraList = action.payload
+        },
+        setOpenSuraListDialog: (state, action) => {
+            state.openSuraListDialog = action.payload
         }
-    },
+    }
 })
 
-export const { setReload, setOpenBottomSheet, setOpenSuraList } = ReloaderSlice.actions
+export const { setReload, setOpenBottomSheet, setOpenSuraList, setOpenSuraListDialog } = ReloaderSlice.actions
 
 export default ReloaderSlice.reducer

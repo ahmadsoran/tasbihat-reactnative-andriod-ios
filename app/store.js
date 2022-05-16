@@ -4,9 +4,6 @@ export const store = configureStore({
     reducer: {
         ReloaderSlice,
     },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware({
-        serializableCheck: false,
 
-    }),
 
 })

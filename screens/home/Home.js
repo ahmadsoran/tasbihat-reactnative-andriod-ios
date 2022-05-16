@@ -7,7 +7,7 @@ import DarkBG from '../../assets/img/natureDark.jpg'
 import soundRF from '../../assets/audio/penClick.mp3'
 import { Audio } from 'expo-av';
 import { FontAwesome } from '@expo/vector-icons';
-import * as MyFont from 'expo-font'
+import { loadAsync } from 'expo-font'
 import AsyncStorage from '../../storage/AsyncStorage'
 import { useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
@@ -26,7 +26,7 @@ const Home = ({ navigation }) => {
     const isReloading = useSelector(state => state.ReloaderSlice.Reload)
     useEffect(() => {
 
-        MyFont.loadAsync({
+        loadAsync({
             'DigitalFont': require('../../assets/fonts/digital-7.ttf'),
 
         }).then(() => {

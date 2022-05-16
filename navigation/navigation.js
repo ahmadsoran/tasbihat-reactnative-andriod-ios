@@ -4,14 +4,14 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../screens/home/Home';
 import AboutScreen from '../screens/about/AboutScreen';
 import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
-import { Text, TouchableOpacity, useColorScheme, View, Platform } from 'react-native';
+import { Text, TouchableOpacity, useColorScheme, View } from 'react-native';
 import { MyStyles } from '../assets/styles/styles';
 import Setting from '../screens/modals/Setting';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import linking from './LinkingConf';
 import WallpaperScreen from '../screens/others/WallpaperScreen';
 import AzkarScreen from '../screens/others/AzkarScreen';
-import { setOpenBottomSheet, setOpenSuraList } from '../slices/ReloaderSlice';
+import { setOpenBottomSheet, setOpenSuraList, setOpenSuraListDialog } from '../slices/ReloaderSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import QuranScreen from '../screens/quran/QuranScreen';
@@ -113,7 +113,7 @@ const NavigationBar = () => {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const openSuraList = useSelector(state => state.ReloaderSlice.openSuraList);
-    console.log(openSuraList);
+    const openSuraListDialog = useSelector(state => state.ReloaderSlice.openSuraListDialog);
     useEffect(() => {
         AsyncStorage.multiGetFromStorage('SuraNow', 'SuraID').then(res => {
             if (res[0][1] && res[1][1] !== null) {
@@ -219,7 +219,9 @@ const NavigationBar = () => {
                         <Text style={{
                             color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX,
                             fontSize: 20
-                        }}>
+                        }}
+
+                        >
                             {SuraNow}
                         </Text>
                     ),
@@ -228,9 +230,13 @@ const NavigationBar = () => {
                         color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX,
                     },
                     headerRight: () => (
-                        <TouchableOpacity onPress={() => {
+                        <TouchableOpacity onLongPress={() => {
                             dispatch(setOpenSuraList(!openSuraList))
-                        }}>
+                        }}
+                            onPress={() => {
+                                dispatch(setOpenSuraListDialog(!openSuraListDialog))
+                            }}
+                        >
                             <MaterialCommunityIcons name="dots-vertical" size={30} color={ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX} />
                         </TouchableOpacity>
                     )

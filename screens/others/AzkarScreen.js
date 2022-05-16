@@ -65,7 +65,7 @@ export default function AzkarScreen() {
             t('resetToDefault'),
             t('doYouWantToReset'),
             [
-                { text: t('no'), onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+                { text: t('no'), style: 'cancel' },
                 {
                     text: t('yes'), onPress: () => {
                         setAzkar(azkar)
@@ -170,7 +170,7 @@ export default function AzkarScreen() {
                                                 t('delete'),
                                                 `${data}`,
                                                 [
-                                                    { text: t('cancel'), onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+                                                    { text: t('cancel'), style: 'cancel' },
                                                     { text: t('delete'), onPress: () => { DeleteFromAzkar(data) } },
                                                 ],
                                                 { cancelable: true }

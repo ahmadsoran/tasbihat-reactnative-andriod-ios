@@ -31,6 +31,19 @@
         "alreadyAdded": "Already added",
         "cantDeleteLastZikr": "Can't delete last zikr",
         "selectSura": "Select Sura",
-        "quran": "Quran"
+        "quran": "Quran",
+        "lastSaved": "Last Saved",
+        "stop": "Stop",
+        "start": "Start",
+        "new": "New",
+        "error": "Error",
+        "ThereIsNoSavedData": "There is no saved data",
+        "resume": "Resume",
+        "KurdishQuranPlayer": "Kurdish Quran Player",
+        "Quran & Kurdish Translation": "Quran & Kurdish Translation",
+        "Surah": "Surah",
+        "resumeWarining": "Resuming audio will take some time because we send the last position saved of audio to the server and then audio will resume if your connection is good you should not face loading issues so please be patient.",
+        "Quran Only Arabic Sound": "Quran Only Arabic Sound",
+        "Fonts": "Font"
     }
 }

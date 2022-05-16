@@ -134,7 +134,7 @@ const Setting = ({ navigation }) => {
                     </Text>
                 </View>
                 <Slider
-                    minimumValue={10}
+                    minimumValue={1}
                     maximumValue={zikrNumMax}
                     value={zikrNum}
                     onValueChange={(value) => {

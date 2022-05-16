@@ -1,8 +1,8 @@
 import { View, Text, useColorScheme, Image, Linking, ScrollView } from 'react-native'
 import React from 'react'
 import { MyStyles, MyStyleSheet } from '../../assets/styles/styles'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { Entypo, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
+import version from '../../app.json'
 
 const AboutScreen = () => {
     const ColorScheme = useColorScheme();
@@ -110,7 +110,7 @@ const AboutScreen = () => {
 
                         }}>
                             <Entypo onPress={() => OpenSocalHandler('https://twitter.com/ahmadsorannn')} name="twitter" size={45} color="#14b5de" />
-                            <FontAwesome5 onPress={() => OpenSocalHandler('https://www.facebook.com/ahmadSoranNn')} name="facebook-f" size={45} color="#015ec1" />
+                            <FontAwesome5 onPress={() => OpenSocalHandler('https://www.facebook.com/Ahmed-Soran-106929792023933')} name="facebook-f" size={45} color="#015ec1" />
                             <FontAwesome5 onPress={() => OpenSocalHandler('https://github.com/ahmadsoran')} name="github" size={45} color="black" />
                             <Entypo onPress={() => OpenSocalHandler('https://iq.linkedin.com/in/ahmad-soran-233935231')} name="linkedin" size={45} color="#004c93" />
                             <MaterialCommunityIcons onPress={() => OpenSocalHandler('https://www.ahmadsoran.com/')} name="web" size={45} color="gray" />
@@ -129,7 +129,15 @@ const AboutScreen = () => {
                     </View>
                 </View>
 
-
+                <Text
+                    style={{
+                        fontSize: 12,
+                        color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : 'gray',
+                        marginTop: 10,
+                        opacity: 0.5,
+                        textAlign: 'center',
+                    }}
+                >V {version.expo.version} &copy; {new Date(Date.now()).getFullYear()} Tasbihat All Right reserved</Text>
             </View>
         </ScrollView>
 

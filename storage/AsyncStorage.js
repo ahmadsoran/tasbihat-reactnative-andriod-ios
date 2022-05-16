@@ -38,4 +38,12 @@ async function multiGetFromStorage(key1, key2) {
         return error.message;
     }
 }
-export default { GetFromStorage, SetToStorage, RemoveFromStorage, multiSetToStorage, multiGetFromStorage };
+async function multiRemoveFromStorage(key1, key2) {
+    try {
+        await AsyncStorage.multiRemove([key1, key2])
+    } catch (error) {
+        return error.message;
+    }
+}
+
+export default { GetFromStorage, SetToStorage, RemoveFromStorage, multiSetToStorage, multiGetFromStorage, multiRemoveFromStorage };

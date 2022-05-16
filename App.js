@@ -6,7 +6,7 @@ import { ThemeProvider } from "@rneui/themed";
 import { setStatusBarStyle } from 'expo-status-bar'
 import { useColorScheme } from "react-native";
 import { useEffect } from "react";
-import * as MyFont from 'expo-font'
+import { loadAsync } from 'expo-font'
 import './lang/i18n';
 
 
@@ -21,10 +21,8 @@ export default function App() {
 
   }
   useEffect(() => {
-    MyFont.loadAsync({
+    loadAsync({
       'DigitalFont': require('./assets/fonts/digital-7.ttf'),
-    }).then(() => {
-      console.log('Fonts loaded')
     })
   }, [])
   return (
