@@ -28,7 +28,7 @@ export default function App() {
     })
 
   }, [])
-  async () => {
+  useEffect(async () => {
     try {
       const update = await Updates.checkForUpdateAsync();
       if (update.isAvailable) {
@@ -41,7 +41,7 @@ export default function App() {
     } catch (e) {
       // handle or log error
     }
-  }
+  }, []);
   return (
     <Provider store={store}>
       <ThemeProvider>
