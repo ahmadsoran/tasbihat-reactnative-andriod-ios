@@ -65,7 +65,13 @@ const Home = ({ navigation }) => {
             }
 
         })
+
     }, [, isReloading])
+
+
+
+
+
 
 
 
@@ -90,7 +96,7 @@ const Home = ({ navigation }) => {
     if (ZikrNum > ZikrNumLimit) {
         setZikrNum(0)
         setZikrNext(ZikrNext + 1)
-        Vibration.vibrate(1000)
+        Vibration.vibrate(10)
 
     }
     if (AzkarFromStorage.length !== 0 && ZikrNext >= AzkarFromStorage.length) {
