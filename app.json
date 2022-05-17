@@ -7,6 +7,10 @@
     "icon": "./assets/img/icon.png",
     "scheme": "tasbihat",
     "userInterfaceStyle": "automatic",
+    "description": "tasbih Counting, quran Text & audio, 3 language support & more",
+    "privacy": "public",
+    "githubUrl": "https://github.com/ahmadsoran",
+    "owner": "ahmadsorann",
     "splash": {
       "image": "./assets/img/splash.png",
       "resizeMode": "cover",
@@ -21,7 +25,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.ahmedsoran.tasbihat",
-      "buildNumber": "1"
+      "buildNumber": "1.0.3"
     },
     "android": {
       "adaptiveIcon": {
