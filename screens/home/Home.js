@@ -93,7 +93,7 @@ const Home = ({ navigation }) => {
         setZikrNum(ZikrNum + 1)
 
     }
-    if (ZikrNum > ZikrNumLimit) {
+    if (ZikrNum >= ZikrNumLimit) {
         setZikrNum(0)
         setZikrNext(ZikrNext + 1)
         Vibration.vibrate(10)
