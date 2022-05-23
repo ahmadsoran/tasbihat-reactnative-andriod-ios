@@ -4,7 +4,7 @@ import { MyStyles } from '../../assets/styles/styles';
 import DRKBG from '../../assets/img/natureDark.jpg'
 import LGHTBG from '../../assets/img/natureLight.jpg'
 import AsyncStorage from '../../storage/AsyncStorage';
-import { Button, Image } from '@rneui/themed';
+import { Button, Image, Slider } from '@rneui/themed';
 import * as ImagePicker from 'expo-image-picker';
 import { setReload } from '../../slices/ReloaderSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,6 +13,8 @@ const WallpaperScreen = () => {
     const ColorScheme = useColorScheme();
     const [WallpaperDark, setWallpaperDark] = useState('')
     const [WallpaperLight, setWallpaperLight] = useState('')
+    const [wallBlurDark, setWallBlurDark] = useState(20)
+    const [wallBlurLight, setWallBlurLight] = useState(20)
     const { t } = useTranslation()
     const [loading, setLoading] = useState({
         btn1: false,
@@ -39,6 +41,18 @@ const WallpaperScreen = () => {
             } else {
                 setWallpaperLight(undefined)
 
+
+            }
+        })
+        AsyncStorage.GetFromStorage('wallBlurLight').then(res => {
+            if (res !== null) {
+                setWallBlurLight(parseInt(res))
+
+            }
+        })
+        AsyncStorage.GetFromStorage('wallBlurDark').then(res => {
+            if (res !== null) {
+                setWallBlurDark(parseInt(res))
 
             }
         })
@@ -101,6 +115,19 @@ const WallpaperScreen = () => {
         }
         )
     }
+    const setWallBlurToStorageDark = (valueDark) => {
+        AsyncStorage.SetToStorage('wallBlurDark', valueDark).then(() => {
+            dispatch(setReload(!isReloading))
+        }).catch(err => console.log(err))
+
+    }
+    const setWallBlurToStorageLight = (valueLight) => {
+        AsyncStorage.SetToStorage('wallBlurLight', valueLight).then(() => {
+            dispatch(setReload(!isReloading))
+        }).catch(err => console.log(err))
+
+    }
+
     return (
         <View style={{
             backgroundColor: ColorScheme === 'dark' ? MyStyles.DarkColor.BGTOX : 'whitesmoke',
@@ -114,29 +141,19 @@ const WallpaperScreen = () => {
                 justifyContent: 'space-between',
             }}>
                 <View style={{ padding: '2%', width: '50%' }}>
-                    {WallpaperDark ?
-                        <Image source={{ uri: WallpaperDark }}
-                            fadeDuration={400}
-                            style={{
-                                width: '100%',
-                                height: 300,
-                                borderRadius: 20,
-                            }}
-                            PlaceholderContent={<Text>Loading...</Text>}
 
-                        />
-                        :
-                        <Image source={DRKBG}
-                            fadeDuration={400}
-                            style={{
-                                width: '100%',
-                                height: 300,
-                                borderRadius: 20,
-                            }}
-                            PlaceholderContent={<Text>Loading...</Text>}
+                    <Image source={WallpaperDark ? { uri: WallpaperDark } : DRKBG}
+                        fadeDuration={400}
+                        style={{
+                            width: '100%',
+                            height: 300,
+                            borderRadius: 20,
+                        }}
+                        PlaceholderContent={<Text>Loading...</Text>}
+                        blurRadius={wallBlurDark}
 
-                        />
-                    }
+                    />
+
                     <Button title={t('change')}
                         containerStyle={{
                             marginTop: '6%',
@@ -166,33 +183,49 @@ const WallpaperScreen = () => {
                         onPress={removeWallpaperFromStorage}
                         loading={loading.btn2}
                     />
+                    <Text style={{
+                        fontSize: 20,
+                        textAlign: 'center',
+                        marginVertical: '10%',
+                        color: MyStyles.DarkColor.TOX,
+                    }} >{t('blur')}</Text>
+                    <Slider
+                        minimumValue={0}
+                        maximumValue={100}
+                        value={wallBlurDark}
+                        step={5}
+                        thumbTintColor={MyStyles.DarkColor.KAL}
+                        thumbStyle={{
+                            width: 30,
+                            height: 15,
+                        }}
+                        onSlidingComplete={(value) => {
+                            setWallBlurDark(value)
+                            setWallBlurToStorageDark(value.toString())
+                        }}
+
+
+                    />
+                    <Text style={{
+                        fontSize: 20,
+                        textAlign: 'center',
+                    }}>{wallBlurDark} %</Text>
                 </View>
                 <View style={{ padding: '2%', width: '50%' }}>
 
-                    {WallpaperLight ?
-                        <Image source={{ uri: WallpaperLight }}
-                            fadeDuration={400}
-                            style={{
-                                width: '100%',
-                                height: 300,
-                                borderRadius: 20,
-                            }}
-                            PlaceholderContent={<Text>Loading...</Text>}
 
-                        />
-                        :
-                        <Image source={LGHTBG}
-                            fadeDuration={400}
-                            style={{
-                                width: '100%',
-                                height: 300,
-                                borderRadius: 20,
-                            }}
-                            PlaceholderContent={<Text>Loading...</Text>}
+                    <Image source={WallpaperLight ? { uri: WallpaperLight } : LGHTBG}
+                        fadeDuration={400}
+                        style={{
+                            width: '100%',
+                            height: 300,
+                            borderRadius: 20,
+                        }}
+                        PlaceholderContent={<Text>Loading...</Text>}
+                        blurRadius={wallBlurLight}
 
+                    />
 
-                        />
-                    }
                     <Button title={t('change')}
                         containerStyle={{
                             marginTop: '6%',
@@ -224,6 +257,33 @@ const WallpaperScreen = () => {
                         onPress={removeWallpaperFromStorage2}
                         loading={loading.btn4}
                     />
+                    <Text style={{
+                        fontSize: 20,
+                        textAlign: 'center',
+                        marginVertical: '10%',
+                        color: MyStyles.LightColor.TOX,
+                    }} >{t('blur')}</Text>
+                    <Slider
+                        minimumValue={0}
+                        maximumValue={100}
+                        value={wallBlurLight}
+                        step={5}
+                        thumbTintColor={MyStyles.LightColor.KAL}
+                        thumbStyle={{
+                            width: 30,
+                            height: 15,
+                        }}
+                        onSlidingComplete={(value) => {
+                            setWallBlurLight(value)
+                            setWallBlurToStorageLight(value.toString())
+                        }}
+
+
+                    />
+                    <Text style={{
+                        fontSize: 20,
+                        textAlign: 'center',
+                    }}>{wallBlurLight} %</Text>
                 </View>
             </View>
         </View>

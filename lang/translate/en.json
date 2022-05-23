@@ -45,7 +45,8 @@
         "resumeWarining": "Resuming audio will take some time because we send the last position saved of audio to the server and then audio will resume if your connection is good you should not face loading issues so please be patient.",
         "Quran Only Arabic Sound": "Quran Only Arabic Sound",
         "Fonts": "Font",
-        "UpdateAvailable": "New Change Available",
-        "PleaseUpdateToNewVersion": "Hit OK to apply the new chenges "
+        "updateneed": "New Change Available",
+        "updatenow": "Hit OK to apply the new chenges ",
+        "blur": "Blur"
     }
 }

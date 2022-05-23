@@ -23,6 +23,8 @@ const Home = ({ navigation }) => {
     const azkar = ['سُبْحَانَ اللَّهِ', 'الْحَمْدُ لِلَّهِ', 'لا إِلَهَ إِلا اللَّهُ', 'اللَّهُ أَكْبَر']
     const [sound, setSound] = React.useState();
     const [fontLoaded, setFontLoaded] = React.useState(false);
+    const [wallBlurDark, setWallBlurDark] = React.useState(20);
+    const [wallBlurLight, setWallBlurLight] = React.useState(20);
     const isReloading = useSelector(state => state.ReloaderSlice.Reload)
     useEffect(() => {
 
@@ -64,6 +66,18 @@ const Home = ({ navigation }) => {
                 setAzkarFromStorage(azkar)
             }
 
+        })
+        AsyncStorage.GetFromStorage('wallBlurLight').then(res => {
+            if (res !== null) {
+                setWallBlurLight(parseInt(res))
+
+            }
+        })
+        AsyncStorage.GetFromStorage('wallBlurDark').then(res => {
+            if (res !== null) {
+                setWallBlurDark(parseInt(res))
+
+            }
         })
 
     }, [, isReloading])
@@ -107,46 +121,27 @@ const Home = ({ navigation }) => {
     const { t } = useTranslation()
     return (
         <>
-            {
-                WallpaperScreenDark ?
-                    <ImageBackground source={{ uri: WallpaperScreenDark }} blurRadius={20} style={{
-                        width: '102%', height: '102%',
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        zIndex: ColorScheme === 'dark' ? -1 : -2,
-                        opacity: ColorScheme === 'dark' ? 1 : 0,
-                    }} />
-                    :
-                    <ImageBackground source={DarkBG} blurRadius={20} style={{
-                        width: '102%', height: '102%',
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        zIndex: ColorScheme === 'dark' ? -1 : -2,
-                        opacity: ColorScheme === 'dark' ? 1 : 0,
-                    }} />
-            }
-            {
-                WallpaperScreenLight ?
-                    <ImageBackground source={{ uri: WallpaperScreenLight }} blurRadius={20} style={{
-                        width: '102%', height: '102%',
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        zIndex: ColorScheme === 'dark' ? -2 : -1,
-                        opacity: ColorScheme === 'dark' ? 0 : 1,
-                    }} />
-                    :
-                    <ImageBackground source={LightBG} blurRadius={20} style={{
-                        width: '102%', height: '102%',
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        zIndex: ColorScheme === 'dark' ? -2 : -1,
-                        opacity: ColorScheme === 'dark' ? 0 : 1,
-                    }} />
-            }
+
+
+            <ImageBackground source={WallpaperScreenDark ? { uri: WallpaperScreenDark } : DarkBG} blurRadius={wallBlurDark} style={{
+                width: '102%', height: '102%',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                zIndex: ColorScheme === 'dark' ? -1 : -2,
+                opacity: ColorScheme === 'dark' ? 1 : 0,
+            }} />
+
+
+
+            <ImageBackground source={WallpaperScreenLight ? { uri: WallpaperScreenLight } : LightBG} blurRadius={wallBlurLight} style={{
+                width: '102%', height: '102%',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                zIndex: ColorScheme === 'dark' ? -2 : -1,
+                opacity: ColorScheme === 'dark' ? 0 : 1,
+            }} />
 
             <SafeAreaView>
                 <TouchableOpacity style={{

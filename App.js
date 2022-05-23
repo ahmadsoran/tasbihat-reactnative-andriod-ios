@@ -7,15 +7,23 @@ import { setStatusBarStyle } from 'expo-status-bar'
 import { Alert, useColorScheme } from "react-native";
 import { useEffect } from "react";
 import { loadAsync } from 'expo-font'
-import * as Updates from 'expo-updates';
-
 import './lang/i18n';
-import { useTranslation } from "react-i18next";
-
+import * as Updates from 'expo-updates';
+async function checkForUpdate() {
+  const update = await Updates.checkForUpdateAsync();
+  try {
+    if (update.isAvailable) {
+      await Updates.fetchUpdateAsync();
+      // ... notify user of update ...
+      await Updates.reloadAsync();
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
 
 export default function App() {
   const ColorScheme = useColorScheme()
-  const { t } = useTranslation()
   if (ColorScheme === 'dark') {
     setStatusBarStyle('light')
 
@@ -28,34 +36,10 @@ export default function App() {
     loadAsync({
       'DigitalFont': require('./assets/fonts/digital-7.ttf'),
     })
+    checkForUpdate();
 
   }, [])
-  useEffect(async () => {
-    try {
-      const update = await Updates.checkForUpdateAsync();
-      if (update.isAvailable) {
-        console.log('update availabile')
-        Alert.alert(
-          t('UpdateAvailable'),
-          t('PleaseUpdateToNewVersion'),
-          [
 
-            {
-              text: t('ok'), onPress: () => Updates.fetchUpdateAsync().then(() => {
-                Updates.reloadAsync()
-              })
-            },
-          ],
-          { cancelable: false },
-        );
-        // ... notify user of update ...
-
-
-      }
-    } catch (e) {
-      // handle or log error
-    }
-  }, []);
   return (
     <Provider store={store}>
       <ThemeProvider>
