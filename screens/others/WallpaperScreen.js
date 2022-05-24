@@ -11,8 +11,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 const WallpaperScreen = () => {
     const ColorScheme = useColorScheme();
-    const [WallpaperDark, setWallpaperDark] = useState('')
-    const [WallpaperLight, setWallpaperLight] = useState('')
+    const [WallpaperDark, setWallpaperDark] = useState(undefined)
+    const [WallpaperLight, setWallpaperLight] = useState(undefined)
     const [wallBlurDark, setWallBlurDark] = useState(20)
     const [wallBlurLight, setWallBlurLight] = useState(20)
     const { t } = useTranslation()

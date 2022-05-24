@@ -689,7 +689,7 @@ const QuranScreen = () => {
                         color: 'gray',
                         textAlign: 'center',
                     }}>
-                        {t('lastSaved')}
+                        {t('QuranSettings')}
                     </Text>
                     <MaterialCommunityIcons name="close" size={30} color="#ff0000a0" style={{
                         position: 'absolute',

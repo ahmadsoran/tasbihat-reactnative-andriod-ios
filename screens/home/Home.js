@@ -223,9 +223,9 @@ const Home = ({ navigation }) => {
                                 <Text style={{ textAlign: 'center', fontSize: 40, opacity: 0.7, color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX }}>{t('times')}</Text>
                                 {
                                     fontLoaded ?
-                                        <Text style={{ textAlign: 'center', fontSize: 65, opacity: .7, color: ColorScheme === 'dark' ? MyStyles.DarkColor.KAL : MyStyles.LightColor.TOX, fontFamily: 'DigitalFont' }}>{ZikrNum}</Text>
+                                        <Text style={{ textAlign: 'center', fontSize: 65, opacity: .7, color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX, fontFamily: 'DigitalFont' }}>{ZikrNum}</Text>
                                         :
-                                        <Text style={{ textAlign: 'center', fontSize: 65, opacity: .7, color: ColorScheme === 'dark' ? MyStyles.DarkColor.KAL : MyStyles.LightColor.TOX }}>{ZikrNum}</Text>
+                                        <Text style={{ textAlign: 'center', fontSize: 65, opacity: .7, color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX }}>{ZikrNum}</Text>
 
                                 }
                             </View>
