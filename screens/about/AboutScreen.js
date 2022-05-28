@@ -1,14 +1,18 @@
-import { View, Text, useColorScheme, Image, Linking, ScrollView } from 'react-native'
+import { View, Text, useColorScheme, Image, Linking, ScrollView, Share } from 'react-native'
 import React from 'react'
 import { MyStyles, MyStyleSheet } from '../../assets/styles/styles'
 import { Entypo, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import version from '../../app.json'
+import ShareLinkHandler from '../../storage/ShareData';
 
 const AboutScreen = () => {
     const ColorScheme = useColorScheme();
     const OpenSocalHandler = (url) => {
         Linking.openURL(url);
     }
+
+
+
     return (
 
         <ScrollView style={{
@@ -124,6 +128,7 @@ const AboutScreen = () => {
 
                         }}>
                             <MaterialCommunityIcons onPress={() => Linking.openURL('mailto:ahmadsorann1@gmail.com')} name="email" size={45} color="#56b290ff" />
+                            <MaterialCommunityIcons onPress={() => ShareLinkHandler('https://tasbihat.en.uptodown.com/android')} name="share-variant" size={45} color="#4b5b558d" />
 
                         </View>
                     </View>

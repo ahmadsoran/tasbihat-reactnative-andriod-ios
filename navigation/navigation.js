@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../screens/home/Home';
 import AboutScreen from '../screens/about/AboutScreen';
-import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Entypo, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Text, TouchableOpacity, useColorScheme, View } from 'react-native';
 import { MyStyles } from '../assets/styles/styles';
 import Setting from '../screens/modals/Setting';
@@ -16,6 +16,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import QuranScreen from '../screens/quran/QuranScreen';
 import AsyncStorage from '../storage/AsyncStorage';
+import PrayerTime from '../screens/others/PrayerTime';
+import QiblaScreen from '../screens/others/QiblaScreen';
 const Tab = createBottomTabNavigator();
 export default function NavigationApp() {
     return (
@@ -134,9 +136,9 @@ const NavigationBar = () => {
                 tabBarStyle: {
                     backgroundColor: ColorScheme === 'dark' ? MyStyles.DarkColor.TOX : MyStyles.LightColor.KALTR,
                     position: 'absolute',
-                    bottom: 10,
-                    left: 20,
-                    right: 20,
+                    bottom: 13,
+                    left: 5,
+                    right: 5,
                     borderRadius: 20,
                     elevation: 13,
                     shadowColor: ColorScheme === 'dark' ? MyStyles.DarkColor.TOX : MyStyles.LightColor.KALTR,
@@ -168,6 +170,32 @@ const NavigationBar = () => {
                         }}>
                             <MaterialCommunityIcons name="hands-pray" size={size} color={color} />
                             <Text style={{ color: focused ? ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX : 'gray' }}>{t('tasbih')}</Text>
+                        </View>
+                    ),
+                    headerShown: false,
+                    tabBarActiveTintColor: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX,
+
+
+                }}
+
+
+            />
+            <Tab.Screen
+                name="Qibla"
+                component={QiblaScreen}
+                options={{
+
+
+                    tabBarIcon: ({ color, size, focused }) => (
+                        <View style={{
+                            flex: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            opacity: focused ? 1 : 0.5,
+                        }}>
+                            <FontAwesome5 name="kaaba" size={size} color={color} />
+
+                            <Text style={{ color: focused ? ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX : 'gray' }}>{t('qibla')}</Text>
                         </View>
                     ),
                     headerShown: false,
@@ -246,6 +274,36 @@ const NavigationBar = () => {
                 component={QuranScreen}
 
             />
+
+            <Tab.Screen
+                name="PrayerTime"
+                options={{
+                    tabBarLabel: 'Prayer Time',
+                    tabBarIcon: ({ color, size, focused }) => (
+                        <View style={{
+                            flex: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            opacity: focused ? 1 : 0.5,
+                        }}>
+
+                            <MaterialCommunityIcons name="clock-time-four-outline" size={size} color={color} />
+                            <Text style={{ color: focused ? ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX : 'gray' }}>{t('athan')}</Text>
+
+                        </View>
+                    ),
+                    tabBarActiveTintColor: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX,
+                    headerShown: false,
+                    headerTitle: 'About',
+                    headerTitleAlign: 'center',
+                    headerTitleStyle: {
+                        color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX,
+                    }
+                }}
+
+                component={PrayerTime}
+
+            />
             <Tab.Screen
                 name="About"
                 options={{
@@ -283,7 +341,6 @@ const NavigationBar = () => {
                 component={AboutScreen}
 
             />
-
         </Tab.Navigator>
 
 

@@ -9,12 +9,15 @@ import { useEffect } from "react";
 import { loadAsync } from 'expo-font'
 import './lang/i18n';
 import * as Updates from 'expo-updates';
+import { requestPermissionsAsync } from "./Permissions";
+import { openSettings } from 'expo-linking'
+
 async function checkForUpdate() {
   const update = await Updates.checkForUpdateAsync();
   try {
     if (update.isAvailable) {
       await Updates.fetchUpdateAsync();
-      // ... notify user of update ...
+      // ... notify user of update
       await Updates.reloadAsync();
     }
   } catch (e) {
@@ -32,11 +35,22 @@ export default function App() {
     setStatusBarStyle('dark')
 
   }
+
+
+
+
+
   useEffect(() => {
     loadAsync({
       'DigitalFont': require('./assets/fonts/digital-7.ttf'),
     })
-    checkForUpdate();
+    // if not in production mode
+    if (!__DEV__) {
+      checkForUpdate();
+    }
+
+    requestPermissionsAsync();
+
 
   }, [])
 

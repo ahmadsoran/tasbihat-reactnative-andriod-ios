@@ -11,6 +11,15 @@ import { loadAsync } from 'expo-font'
 import AsyncStorage from '../../storage/AsyncStorage'
 import { useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
+Audio.setAudioModeAsync({
+    allowsRecordingIOS: false,
+    staysActiveInBackground: true,
+    interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
+    playsInSilentModeIOS: true,
+    shouldDuckAndroid: false,
+    interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
+
+})
 const Home = ({ navigation }) => {
     const [ZikrNum, setZikrNum] = useState(0)
     const [ZikrNumLimit, setZikrNumLimit] = useState(100)

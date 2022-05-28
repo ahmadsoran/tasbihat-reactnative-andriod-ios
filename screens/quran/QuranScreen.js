@@ -1,4 +1,4 @@
-import { View, useColorScheme, FlatList, Text, TouchableOpacity, ScrollView, Alert } from 'react-native'
+import { View, useColorScheme, FlatList, Text, TouchableOpacity, ScrollView, Alert, Pressable } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { MyStyles, MyStyleSheet } from '../../assets/styles/styles'
 import QuranKurdish from '../../assets/KurdishQuranJSON/kurdish_bamok.json'
@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import * as MyFont from 'expo-font'
 import { Audio } from 'expo-av'
+import ShareLinkHandler from '../../storage/ShareData'
 const QuranScreen = () => {
     const ColorScheme = useColorScheme();
     const [QuranData, setQuranData] = useState(1)
@@ -228,24 +229,37 @@ const QuranScreen = () => {
     }, [sound]);
     const renderItem = ({ item, index }) => {
         return (
-            <View key={item.verse} style={{
-                paddingHorizontal: 10,
-                paddingVertical: 25,
-                backgroundColor: ColorScheme === 'dark' ? MyStyles.DarkColor.TOX : 'whitesmoke',
-                borderRadius: 10,
-                marginHorizontal: 5,
-                marginVertical: 15,
-                shadowColor: "#000",
-                shadowOffset: {
-                    width: 0,
-                    height: 2,
-                },
-                shadowOpacity: 0.25,
-                shadowRadius: 3.84,
-                elevation: 5,
+            <Pressable style={({ pressed }) => [
+                {
+                    paddingHorizontal: 10,
+                    paddingVertical: 25,
+                    backgroundColor: ColorScheme === 'dark' ? MyStyles.DarkColor.TOX : 'whitesmoke',
+                    borderRadius: 10,
+                    marginHorizontal: 5,
+                    marginVertical: 15,
+                    shadowColor: "#000",
+                    shadowOffset: {
+                        width: 0,
+                        height: 2,
+                    },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 3.84,
+                    elevation: 5,
+                    opacity: pressed ? 0.7 : 1,
+                }
+            ]}
+                onLongPress={() => ShareLinkHandler(` ${item.text} (${item.verse})
+                    
+                    ${lang === 'ku' ? QuranKurdish.translation_root.sura_list[item.chapter - 1].sura[item.verse].aya.translation : ''
+                    }
+                    ${lang === 'ar' ? QuranArabic.quran[item.chapter - 1].sura[item.verse].aya.text : ''
+                    }
+                    ${lang === 'en' ? QuranEnglish.translation_root.sura_list[item.chapter - 1].sura[item.verse].aya.translation : ''
+                    }
+            `)}
 
-            }}
             >
+
                 <TouchableOpacity onPress={() => {
                     AsyncStorage.multiSetToStorage('lastSuraReadedName', item.chapter.toString(), 'lastSuraReadedIndex', `${item.text} (${item.verse})`).then(() => {
                         setChekmarkSave(index)
@@ -376,7 +390,8 @@ const QuranScreen = () => {
 
                 </Text>
 
-            </View>
+            </Pressable>
+
         )
     }
     const renderListSura = ({ item }) => {
