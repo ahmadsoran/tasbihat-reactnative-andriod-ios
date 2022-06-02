@@ -13,11 +13,8 @@ import shekhanPrayTime from '../../assets/PrayerTimeData/shekhan.json'
 import taqtaqPrayTime from '../../assets/PrayerTimeData/taqtaq.json'
 import tuzPrayTime from '../../assets/PrayerTimeData/tuz_khurma.json'
 import zakhoPrayTime from '../../assets/PrayerTimeData/zakho.json'
-
-
 import { useTranslation } from 'react-i18next'
 import moment from 'moment'
-import { setNotificationHandler, scheduleNotificationAsync } from 'expo-notifications'
 import img1 from '../../assets/img/fajr.jpg'
 import img2 from '../../assets/img/sunrise.jpg'
 import img3 from '../../assets/img/aftermoon.jpg'
@@ -28,14 +25,8 @@ import AsyncStorage from '../../storage/AsyncStorage'
 import { CheckBox, Dialog } from '@rneui/themed'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { MyStyles } from '../../assets/styles/styles'
-setNotificationHandler({
-    handleNotification: async () => ({
-        shouldShowAlert: true,
-        shouldPlaySound: true,
-        shouldSetBadge: false,
-        priority: 'max',
-    }),
-});
+
+
 const PrayerTime = () => {
     const [TodayPray, setTodayPray] = useState({
         fajr: '',
@@ -75,46 +66,8 @@ const PrayerTime = () => {
             setLocationUser(data)
         })
     }
-    function ChekSalatTime() {
-        if (moment().format('h:mm A') > TodayPray.dhuhr && moment().format('h:mm A') < TodayPray.asr) {
-            setParyNowIs('dhuhr')
-            setParyNext('asr')
-            setWallpaperScreen(img3)
-        }
-        else if (moment().format('h:mm A') > TodayPray.asr && moment().format('h:mm A') < TodayPray.maghrib) {
-            setParyNowIs('asr')
-            setParyNext('maghrib')
-            setWallpaperScreen(img4)
-        }
-        else if (moment().format('h:mm A') > TodayPray.maghrib && moment().format('h:mm A') < TodayPray.isha) {
-            setParyNowIs('maghrib')
-            setParyNext('isha')
-            setWallpaperScreen(img5)
-        }
-        else if (moment().format('h:mm A') > TodayPray.isha && moment().format('h:mm A') < '12:01 AM') {
-            setParyNowIs('isha')
-            setParyNext('fajr')
-            setWallpaperScreen(img6)
-        }
-        else if (moment().format('h:mm A') > '12:01 AM' && moment().format('h:mm A') < TodayPray.fajr) {
-            setParyNowIs('')
-            setParyNext('fajr')
-            setWallpaperScreen(img6)
-        }
-        else if (moment().format('h:mm A') > TodayPray.fajr && moment().format('h:mm A') < TodayPray.sunrise) {
-            setParyNowIs('fajr')
-            setParyNext('sunrise')
-            setWallpaperScreen(img1)
-        }
-        else if (moment().format('h:mm A') > TodayPray.sunrise && moment().format('h:mm A') < TodayPray.dhuhr) {
-            setParyNowIs('sunrise')
-            setParyNext('dhuhr')
-            setWallpaperScreen(img2)
-        }
 
 
-
-    }
 
     useEffect(() => {
         AsyncStorage.GetFromStorage('PrayerTimeLocation').then(res => {
@@ -159,15 +112,54 @@ const PrayerTime = () => {
                     MapOnData(zakhoPrayTime)
                 }
             } else {
-                MapOnData(sulyPrayTime)
+
+                AsyncStorage.SetToStorage('PrayerTimeLocation', 'suly').then(() => {
+                    setLocationUser('suly')
+                })
             }
-            console.log(res);
+            setLocationUser(res)
 
         })
+        if (moment().format('h:mm A') >= TodayPray.fajr && moment().format('h:mm A') <= TodayPray.sunrise) {
+            setParyNowIs('fajr')
+            setParyNext('sunrise')
+            setWallpaperScreen(img1)
+        }
+        if (moment().format('h:mm A') >= TodayPray.sunrise && moment().format('h:mm A') <= TodayPray.dhuhr) {
+            setParyNowIs('sunrise')
+            setParyNext('dhuhr')
+            setWallpaperScreen(img2)
+        }
+        if (moment().format('h:mm A') >= TodayPray.dhuhr && moment().format('h:mm A') <= TodayPray.asr) {
+            setParyNowIs('dhuhr')
+            setParyNext('asr')
+            setWallpaperScreen(img3)
+        }
+        if (moment().format('h:mm A') >= TodayPray.asr && moment().format('h:mm A') <= TodayPray.maghrib) {
+            setParyNowIs('asr')
+            setParyNext('maghrib')
+            setWallpaperScreen(img4)
+        }
+        if (moment().format('h:mm A') >= TodayPray.maghrib && moment().format('h:mm A') <= TodayPray.isha) {
+            setParyNowIs('maghrib')
+            setParyNext('isha')
+            setWallpaperScreen(img5)
+        }
+        if (moment().format('h:mm A') >= TodayPray.isha && moment().format('h:mm A') <= '12:01 AM') {
+            setParyNowIs('isha')
+            setParyNext('fajr')
+            setWallpaperScreen(img6)
+        }
+        if (moment().format('h:mm A') >= '12:01 AM' && moment().format('h:mm A') <= TodayPray.fajr) {
+            setParyNowIs('')
+            setParyNext('fajr')
+            setWallpaperScreen(img6)
+        }
 
-        ChekSalatTime()
 
     }, [, LocationUser])
+
+
 
 
 
@@ -194,13 +186,13 @@ const PrayerTime = () => {
             />
             <Pressable
                 style={({ pressed }) => ({
-                    backgroundColor: ColorScheme === 'dark' ? pressed ? MyStyles.DarkColor.TOX : MyStyles.DarkColor.TOXTRANS : pressed ? '#ffffffb5' : '#ffffff65',
+                    backgroundColor: ColorScheme === 'dark' ? pressed ? MyStyles.DarkColor.TOX : MyStyles.DarkColor.TOXTRANS : pressed ? MyStyles.LightColor.KALTRIN : MyStyles.LightColor.KALTRINTRANS,
                     width: '80%',
                     padding: '2%',
                     borderRadius: 10,
                 })}
                 onPress={() => setShowLocationDialog(true)}>
-                <Text style={{ fontSize: 20, color: 'white', textAlign: 'center' }} >{t(LocationUser)}</Text>
+                <Text style={{ fontSize: 20, color: 'white', textAlign: 'center' }} >{t(`${LocationUser}`)}</Text>
                 <MaterialCommunityIcons name="arrow-down-thin-circle-outline" size={20} color="white" style={{
                     position: 'absolute',
                     top: '50%',

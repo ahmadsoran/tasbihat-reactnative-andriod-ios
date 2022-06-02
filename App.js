@@ -9,8 +9,7 @@ import { useEffect } from "react";
 import { loadAsync } from 'expo-font'
 import './lang/i18n';
 import * as Updates from 'expo-updates';
-import { requestPermissionsAsync } from "./Permissions";
-import { openSettings } from 'expo-linking'
+
 
 async function checkForUpdate() {
   const update = await Updates.checkForUpdateAsync();
@@ -49,7 +48,7 @@ export default function App() {
       checkForUpdate();
     }
 
-    requestPermissionsAsync();
+
 
 
   }, [])

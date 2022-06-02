@@ -98,11 +98,6 @@ function RootNavigator() {
                     headerTitleStyle: {
                         color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX,
                     },
-
-
-
-
-
                 })
                 } component={Setting} />
             </Stack.Group>
@@ -116,6 +111,7 @@ const NavigationBar = () => {
     const dispatch = useDispatch()
     const openSuraList = useSelector(state => state.ReloaderSlice.openSuraList);
     const openSuraListDialog = useSelector(state => state.ReloaderSlice.openSuraListDialog);
+    const [isDev, setisDev] = useState(undefined)
     useEffect(() => {
         AsyncStorage.multiGetFromStorage('SuraNow', 'SuraID').then(res => {
             if (res[0][1] && res[1][1] !== null) {
@@ -124,6 +120,14 @@ const NavigationBar = () => {
                 AsyncStorage.multiSetToStorage('SuraNow', 'الفاتحة', 'SuraID', '1');
 
             }
+        })
+        AsyncStorage.GetFromStorage('isDev').then(res => {
+            if (res !== null) {
+                setisDev(res)
+            } else {
+                setisDev(undefined)
+            }
+
         })
     }, [, openSuraList])
     return (
@@ -180,32 +184,36 @@ const NavigationBar = () => {
 
 
             />
-            <Tab.Screen
-                name="Qibla"
-                component={QiblaScreen}
-                options={{
+            {
+                isDev &&
+                <Tab.Screen
+                    name="Qibla"
+                    component={QiblaScreen}
+                    options={{
 
 
-                    tabBarIcon: ({ color, size, focused }) => (
-                        <View style={{
-                            flex: 1,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            opacity: focused ? 1 : 0.5,
-                        }}>
-                            <FontAwesome5 name="kaaba" size={size} color={color} />
+                        tabBarIcon: ({ color, size, focused }) => (
+                            <View style={{
+                                flex: 1,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                opacity: focused ? 1 : 0.5,
+                            }}>
+                                <FontAwesome5 name="kaaba" size={size} color={color} />
 
-                            <Text style={{ color: focused ? ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX : 'gray' }}>{t('qibla')}</Text>
-                        </View>
-                    ),
-                    headerShown: false,
-                    tabBarActiveTintColor: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX,
-
-
-                }}
+                                <Text style={{ color: focused ? ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX : 'gray' }}>{t('qibla')}</Text>
+                            </View>
+                        ),
+                        headerShown: false,
+                        tabBarActiveTintColor: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX,
 
 
-            />
+                    }}
+
+
+                />
+            }
+
             <Tab.Screen
                 name="Quran"
                 options={{
@@ -228,7 +236,7 @@ const NavigationBar = () => {
                             }}>
 
                                 <Entypo name="open-book" size={size * 2} color={color} />
-                                <Text style={{ fontSize: 20, color: focused ? ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX : 'gray' }}>{t('quran')}</Text>
+                                <Text style={{ fontSize: 18, color: focused ? ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX : 'gray', textAlign: 'center' }}>{t('quran')}</Text>
 
                             </View>
                         </View>
@@ -274,36 +282,39 @@ const NavigationBar = () => {
                 component={QuranScreen}
 
             />
+            {
+                isDev &&
+                <Tab.Screen
+                    name="PrayerTime"
+                    options={{
+                        tabBarLabel: 'Prayer Time',
+                        tabBarIcon: ({ color, size, focused }) => (
+                            <View style={{
+                                flex: 1,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                opacity: focused ? 1 : 0.5,
+                            }}>
 
-            <Tab.Screen
-                name="PrayerTime"
-                options={{
-                    tabBarLabel: 'Prayer Time',
-                    tabBarIcon: ({ color, size, focused }) => (
-                        <View style={{
-                            flex: 1,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            opacity: focused ? 1 : 0.5,
-                        }}>
+                                <MaterialCommunityIcons name="clock-time-four-outline" size={size} color={color} />
+                                <Text style={{ color: focused ? ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX : 'gray' }}>{t('athan')}</Text>
 
-                            <MaterialCommunityIcons name="clock-time-four-outline" size={size} color={color} />
-                            <Text style={{ color: focused ? ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX : 'gray' }}>{t('athan')}</Text>
+                            </View>
+                        ),
+                        tabBarActiveTintColor: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX,
+                        headerShown: false,
+                        headerTitle: 'About',
+                        headerTitleAlign: 'center',
+                        headerTitleStyle: {
+                            color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX,
+                        }
+                    }}
 
-                        </View>
-                    ),
-                    tabBarActiveTintColor: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX,
-                    headerShown: false,
-                    headerTitle: 'About',
-                    headerTitleAlign: 'center',
-                    headerTitleStyle: {
-                        color: ColorScheme === 'dark' ? MyStyles.DarkColor.KALTRIN : MyStyles.LightColor.TOX,
-                    }
-                }}
+                    component={PrayerTime}
 
-                component={PrayerTime}
+                />
+            }
 
-            />
             <Tab.Screen
                 name="About"
                 options={{

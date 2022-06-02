@@ -2,7 +2,7 @@
   "expo": {
     "name": "tasbihat",
     "slug": "tasbihat",
-    "version": "1.3.0",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/img/icon.png",
     "scheme": "tasbihat",
@@ -23,9 +23,9 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": false,
       "bundleIdentifier": "com.ahmedsoran.tasbihat",
-      "buildNumber": "1.3.0"
+      "buildNumber": "2.0.0",
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
@@ -50,27 +50,6 @@
         "expo-image-picker",
         {
           "photosPermission": "The app accesses your photos to let you set your custom wallpaper"
-        }
-      ],
-      [
-        "expo-notifications",
-        {
-          "icon": "./assets/img/icon.png",
-          "color": "#00b85c",
-          "sounds": [
-            "./assets/adthan/athan_1.mp3",
-            "./assets/adthan/athan_2.mp3",
-            "./assets/adthan/athan_3.mp3",
-            "./assets/adthan/athan_4.mp3",
-            "./assets/adthan/athan_5.mp3",
-            "./assets/adthan/athan_6.mp3",
-            "./assets/adthan/athan_7.mp3",
-            "./assets/adthan/athan_8.mp3",
-            "./assets/adthan/athan_9.mp3",
-            "./assets/adthan/athan_10.mp3",
-            "./assets/adthan/athan_11.mp3",
-            "./assets/adthan/athan_12.mp3"
-          ]
         }
       ]
     ],

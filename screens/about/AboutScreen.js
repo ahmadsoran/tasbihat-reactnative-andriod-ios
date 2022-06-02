@@ -1,9 +1,10 @@
-import { View, Text, useColorScheme, Image, Linking, ScrollView, Share } from 'react-native'
+import { View, Text, useColorScheme, Image, Linking, ScrollView, Share, Alert } from 'react-native'
 import React from 'react'
 import { MyStyles, MyStyleSheet } from '../../assets/styles/styles'
 import { Entypo, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import version from '../../app.json'
 import ShareLinkHandler from '../../storage/ShareData';
+import AsyncStorage from '../../storage/AsyncStorage';
 
 const AboutScreen = () => {
     const ColorScheme = useColorScheme();
@@ -11,7 +12,28 @@ const AboutScreen = () => {
         Linking.openURL(url);
     }
 
+    const SetDevToStorage = () => {
+        Alert.alert(
+            'Developer',
+            'Are you sure you want to set developer mode?',
+            [
+                {
+                    text: 'Yes',
+                    onPress: () => {
+                        AsyncStorage.SetToStorage('isDev', 'yes');
+                    }
+                },
+                {
+                    text: 'No',
+                    onPress: () => {
+                        AsyncStorage.RemoveFromStorage('isDev');
+                    }
+                }
+            ]
+        )
 
+
+    }
 
     return (
 
@@ -142,6 +164,7 @@ const AboutScreen = () => {
                         opacity: 0.5,
                         textAlign: 'center',
                     }}
+                    onLongPress={SetDevToStorage}
                 >V {version.expo.version} &copy; {new Date(Date.now()).getFullYear()} Tasbihat All Right reserved</Text>
             </View>
         </ScrollView>
