@@ -136,7 +136,7 @@ const AboutScreen = () => {
 
                         }}>
                             <Entypo onPress={() => OpenSocalHandler('https://twitter.com/ahmadsorannn')} name="twitter" size={45} color="#14b5de" />
-                            <FontAwesome5 onPress={() => OpenSocalHandler('https://www.facebook.com/Ahmed-Soran-106929792023933')} name="facebook-f" size={45} color="#015ec1" />
+                            <FontAwesome5 onPress={() => OpenSocalHandler('https://www.facebook.com/ahmadSoranNn')} name="facebook-f" size={45} color="#015ec1" />
                             <FontAwesome5 onPress={() => OpenSocalHandler('https://github.com/ahmadsoran')} name="github" size={45} color="black" />
                             <Entypo onPress={() => OpenSocalHandler('https://iq.linkedin.com/in/ahmad-soran-233935231')} name="linkedin" size={45} color="#004c93" />
                             <MaterialCommunityIcons onPress={() => OpenSocalHandler('https://www.ahmadsoran.com/')} name="web" size={45} color="gray" />
