@@ -1,20 +1,6 @@
-import { View, Text, ImageBackground, useColorScheme, SafeAreaView, Pressable, ScrollView } from 'react-native'
+import { View, Text, ImageBackground, useColorScheme, SafeAreaView, Pressable, ScrollView, Platform } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import sulyPrayTime from '../../assets/PrayerTimeData/sulaymaniyah.json'
-import erbilPrayTime from '../../assets/PrayerTimeData/erbil.json'
-import akrePrayTime from '../../assets/PrayerTimeData/akre.json'
-import duhokPrayTime from '../../assets/PrayerTimeData/duhok.json'
-import halabjaPrayTime from '../../assets/PrayerTimeData/halabja.json'
-import jalawlaPrayTime from '../../assets/PrayerTimeData/jalawla.json'
-import khanaqinPrayTime from '../../assets/PrayerTimeData/khanaqin.json'
-import kirkukPrayTime from '../../assets/PrayerTimeData/kirkuk.json'
-import qaraHanjirPrayTime from '../../assets/PrayerTimeData/qara_hanjir.json'
-import shekhanPrayTime from '../../assets/PrayerTimeData/shekhan.json'
-import taqtaqPrayTime from '../../assets/PrayerTimeData/taqtaq.json'
-import tuzPrayTime from '../../assets/PrayerTimeData/tuz_khurma.json'
-import zakhoPrayTime from '../../assets/PrayerTimeData/zakho.json'
 import { useTranslation } from 'react-i18next'
-import moment from 'moment'
 import img1 from '../../assets/img/fajr.jpg'
 import img2 from '../../assets/img/sunrise.jpg'
 import img3 from '../../assets/img/aftermoon.jpg'
@@ -25,6 +11,18 @@ import AsyncStorage from '../../storage/AsyncStorage'
 import { CheckBox, Dialog } from '@rneui/themed'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { MyStyles } from '../../assets/styles/styles'
+import KUprayer from 'kurdistan-prayer-times'
+import * as Notifications from 'expo-notifications'
+import { requestPermissionsAsync } from '../../Permissions'
+requestPermissionsAsync()
+
+Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: false,
+    }),
+});
 
 
 const PrayerTime = () => {
@@ -37,133 +35,114 @@ const PrayerTime = () => {
         isha: '',
     })
     const { t } = useTranslation()
-    const Today = new Date(Date.now()).getDate().toString()
-    const ThisMonth = new Date(Date.now()).getMonth() + 1
     const [ParyNowIs, setParyNowIs] = useState('')
     const [ParyNext, setParyNext] = useState('')
     const [WallpaperScreen, setWallpaperScreen] = useState('')
     const ColorScheme = useColorScheme()
     const [ShowLocationDialog, setShowLocationDialog] = useState(false)
-    const [LocationUser, setLocationUser] = useState('Suleymaniyah')
-    const KurdishCity = ['suly', 'erbil', 'akre', 'duhok', 'halabja', 'jalawla', 'khanaqin', 'kirkuk', 'qarahanjir', 'shekhan', 'taqtaq', 'tuz', 'zakho']
-    const MapOnData = (data) => {
-        data?.map(data => {
+    const [LocationUser, setLocationUser] = useState('sulaymaniyah')
+    const KurdishCity = [
+        'sulaymaniyah',
+        'erbil',
+        'kirkuk',
+        'taqtaq',
+        'akre',
+        'duhok',
+        'halabja',
+        'jalawla',
+        'khanaqin',
+        'qaraHanjir',
+        'shekhan',
+        'tuzKhurma',
+        'zakhoo'
 
-            if (data.day == Today && data.month == ThisMonth) {
-                setTodayPray({
-                    fajr: moment(data.time[0], 'h:mm').format('h:mm A'),
-                    sunrise: moment(data.time[1], 'h:mm').format('h:mm A'),
-                    dhuhr: moment(data.time[2], 'h:mm').format('h:mm A'),
-                    asr: moment(data.time[3], 'h:mm').format('h:mm A'),
-                    maghrib: moment(data.time[4], 'h:mm').format('h:mm A'),
-                    isha: moment(data.time[5], 'h:mm').format('h:mm A'),
-                })
-            }
-        })
-    }
+    ]
+    const { res } = KUprayer(LocationUser).format(12).date('Today')
+    const { res: res2 } = KUprayer(LocationUser).format(24).date('Today')
     const SetPrayerTimeLocationToStorage = (data) => {
         AsyncStorage.SetToStorage('PrayerTimeLocation', data).then(() => {
             setLocationUser(data)
         })
     }
-
+    const now = new Date(Date.now()).getHours()
+    const PT = {
+        fajr: res.TodayPrayer.Fajr,
+        sunrise: res.TodayPrayer.Sunrise,
+        dhuhr: res.TodayPrayer.Dhuhr,
+        asr: res.TodayPrayer.Asr,
+        maghrib: res.TodayPrayer.Maghrib,
+        isha: res.TodayPrayer.Isha,
+    }
+    const PT2 = {
+        fajr: res2.TodayPrayer.Fajr,
+        sunrise: res2.TodayPrayer.Sunrise,
+        dhuhr: res2.TodayPrayer.Dhuhr,
+        asr: res2.TodayPrayer.Asr,
+        maghrib: res2.TodayPrayer.Maghrib,
+        isha: res2.TodayPrayer.Isha,
+    }
+    const RPT = [
+        PT2.fajr,
+        PT2.sunrise,
+        PT2.dhuhr,
+        PT2.asr,
+        PT2.maghrib,
+        PT2.isha
+    ]
+    const filterTimeFajr = parseInt(RPT[0].split(':')[0])
+    const filterTimeSunrisw = parseInt(RPT[1].split(':')[0])
+    const filterTimeDhuhr = parseInt(RPT[2].split(':')[0])
+    const filterTimeAsr = parseInt(RPT[3].split(':')[0])
+    const filterTimeMaghrib = parseInt(RPT[4].split(':')[0])
+    const filterTimeIsha = parseInt(RPT[5].split(':')[0])
 
 
     useEffect(() => {
-        AsyncStorage.GetFromStorage('PrayerTimeLocation').then(res => {
-            if (res !== null) {
-                if (res === 'suly') {
-                    MapOnData(sulyPrayTime)
-                }
-                if (res === 'erbil') {
-                    MapOnData(erbilPrayTime)
-                }
-                if (res === 'akre') {
-                    MapOnData(akrePrayTime)
-                }
-                if (res === 'duhok') {
-                    MapOnData(duhokPrayTime)
-                }
-                if (res === 'halabja') {
-                    MapOnData(halabjaPrayTime)
-                }
-                if (res === 'jalawla') {
-                    MapOnData(jalawlaPrayTime)
-                }
-                if (res === 'khanaqin') {
-                    MapOnData(khanaqinPrayTime)
-                }
-                if (res === 'kirkuk') {
-                    MapOnData(kirkukPrayTime)
-                }
-                if (res === 'qarahanjir') {
-                    MapOnData(qaraHanjirPrayTime)
-                }
-                if (res === 'shekhan') {
-                    MapOnData(shekhanPrayTime)
-                }
-                if (res === 'taqtaq') {
-                    MapOnData(taqtaqPrayTime)
-                }
-                if (res === 'tuz') {
-                    MapOnData(tuzPrayTime)
-                }
-                if (res === 'zakho') {
-                    MapOnData(zakhoPrayTime)
-                }
-            } else {
-
-                AsyncStorage.SetToStorage('PrayerTimeLocation', 'suly').then(() => {
-                    setLocationUser('suly')
-                })
+        AsyncStorage.GetFromStorage('PrayerTimeLocation').then((data) => {
+            if (data) {
+                setLocationUser(data)
             }
-            setLocationUser(res)
-
         })
-        if (moment().format('h:mm A') >= TodayPray.fajr && moment().format('h:mm A') <= TodayPray.sunrise) {
+        setTodayPray(PT)
+        if (now >= filterTimeFajr && now < filterTimeSunrisw) {
             setParyNowIs('fajr')
             setParyNext('sunrise')
             setWallpaperScreen(img1)
+
         }
-        if (moment().format('h:mm A') >= TodayPray.sunrise && moment().format('h:mm A') <= TodayPray.dhuhr) {
+        if (now >= filterTimeSunrisw && now < filterTimeDhuhr) {
             setParyNowIs('sunrise')
             setParyNext('dhuhr')
             setWallpaperScreen(img2)
+
         }
-        if (moment().format('h:mm A') >= TodayPray.dhuhr && moment().format('h:mm A') <= TodayPray.asr) {
+        if (now >= filterTimeDhuhr && now < filterTimeAsr) {
             setParyNowIs('dhuhr')
             setParyNext('asr')
             setWallpaperScreen(img3)
         }
-        if (moment().format('h:mm A') >= TodayPray.asr && moment().format('h:mm A') <= TodayPray.maghrib) {
+        if (now >= filterTimeAsr && now < filterTimeMaghrib) {
             setParyNowIs('asr')
             setParyNext('maghrib')
             setWallpaperScreen(img4)
         }
-        if (moment().format('h:mm A') >= TodayPray.maghrib && moment().format('h:mm A') <= TodayPray.isha) {
+        if (now >= filterTimeMaghrib && now < filterTimeIsha) {
             setParyNowIs('maghrib')
             setParyNext('isha')
             setWallpaperScreen(img5)
         }
-        if (moment().format('h:mm A') >= TodayPray.isha && moment().format('h:mm A') <= '12:01 AM') {
+        if (now >= filterTimeIsha && now < filterTimeIsha + 1) {
             setParyNowIs('isha')
             setParyNext('fajr')
             setWallpaperScreen(img6)
         }
-        if (moment().format('h:mm A') >= '12:01 AM' && moment().format('h:mm A') <= TodayPray.fajr) {
-            setParyNowIs('')
+        if (now >= filterTimeIsha + 1) {
             setParyNext('fajr')
             setWallpaperScreen(img6)
         }
 
 
     }, [, LocationUser])
-
-
-
-
-
-
 
     return (
 

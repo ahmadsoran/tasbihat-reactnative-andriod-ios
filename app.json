@@ -11,6 +11,7 @@
     "privacy": "public",
     "githubUrl": "https://github.com/ahmadsoran",
     "owner": "ahmadsorann",
+    "jsEngine": "hermes",
     "splash": {
       "image": "./assets/img/splash.png",
       "resizeMode": "cover",
@@ -37,13 +38,30 @@
       "permissions": [
         "INTERNET",
         "VIBRATE"
-      ]
+      ],
+      "useNextNotificationsApi": true
     },
     "plugins": [
       [
         "expo-image-picker",
         {
           "photosPermission": "The app accesses your photos to let you set your custom wallpaper"
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/img/adaptive-icon.png",
+          "color": "#00b85c",
+          "sounds": [
+            "./assets/adthan/athan_1.mp3",
+            "./assets/adthan/athan_2.mp3",
+            "./assets/adthan/athan_3.mp3",
+            "./assets/adthan/athan_4.mp3",
+            "./assets/adthan/athan_5.mp3",
+            "./assets/adthan/athan_6.mp3",
+            "./assets/adthan/athan_7.mp3"
+          ]
         }
       ]
     ],
